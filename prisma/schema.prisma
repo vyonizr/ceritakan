@@ -1,0 +1,26 @@
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Topic {
+  id         Int        @id @default(autoincrement())
+  name       String
+  questions  Question[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  question   String
+  topic_id   Int
+  topic      Topic    @relation(fields: [topic_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+}

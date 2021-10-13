@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: Louis George Cafe;
+    font-weight: 300;
+    src: url(/fonts/louis-george-cafe/300-light.ttf) format('truetype');
+  }
+
+  @font-face {
+    font-family: Louis George Cafe;
+    font-weight: 400;
+    src: url(/fonts/louis-george-cafe/400-regular.ttf) format('truetype');
+  }
+
+  @font-face {
+    font-family: Louis George Cafe;
+    font-weight: 500;
+    src: url(/fonts/louis-george-cafe/700-bold.ttf) format('truetype');
+  }
+
+  @font-face {
+    font-family: Roustel;
+    font-weight: 400;
+    src: url(/fonts/roustel/400-regular.ttf) format('truetype');
+  }
+}
