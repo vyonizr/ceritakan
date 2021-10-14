@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from 'src/utils/prisma'
+import { prisma } from 'src/config'
 import getRandomIntInclusive from 'src/helpers/getRandomIntInclusive'
 
 type Question = {

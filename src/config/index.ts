@@ -1,6 +1,4 @@
-const isDev = process.env.NODE_ENV !== 'production'
-const server = isDev
-  ? `http://localhost:${process.env.PORT}/api`
-  : `${process.env.DEPLOY_URL}/api`
+import prisma from './prisma'
+import server from './server'
 
-export default server
+export { prisma, server }

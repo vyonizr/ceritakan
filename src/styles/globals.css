@@ -12,3 +12,45 @@
 .custom-flex-center {
   @apply flex justify-center items-center;
 }
+
+.sonar {
+  border: 0;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: inline-block;
+  color: #fff;
+  outline: none;
+  position: relative;
+}
+
+.sonar::before {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  animation: sonar-effect 1s ease-in-out 0.1s infinite;
+}
+
+@keyframes sonar-effect {
+  0% {
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 0.5;
+    box-shadow: 0 0 0 5px #fff, 0 0 10px 10px #fff, 0 0 0 10px #fff;
+  }
+  100% {
+    box-shadow: 0 0 0 5px #fff, 0 0 10px 10px #fff, 0 0 0 10px #fff;
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.backface-invisible {
+  backface-visibility: hidden;
+}
