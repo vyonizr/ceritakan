@@ -15,7 +15,7 @@ export default async function handler(
   res: NextApiResponse<ResponsePayload>
 ) {
   const q = req.query.q as string
-  const after_id = (req.query.after_id as string) || 10
+  const after_id = (req.query.after_id as string) || 1
   const results_size = (req.query.results_size as string) || 10
 
   try {
@@ -53,6 +53,7 @@ export default async function handler(
       })
     }
   } catch (error: any) {
+    console.log(error)
     if (error.name === 'CustomError') {
       return res.status(error.statusCode).json({
         status: 'fail',

@@ -11,9 +11,8 @@ module.exports = {
     },
     colors: {
       gray: colors.coolGray,
-      blue: colors.sky,
-      red: colors.rose,
-      pink: colors.fuchsia,
+      blue: colors.blue,
+      white: colors.white,
     },
     fontFamily: {
       sans: ['Louis George Cafe', 'sans-serif'],
