@@ -17,9 +17,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponsePayload>
 ) {
-  let string_read_ids = req.query.read_ids as string
-  const read_ids: number[] =
-    string_read_ids?.split(',').map((id: string) => Number(id)) || []
+  let string_r_ids = req.query.r_ids as string
+  const r_ids: number[] =
+    string_r_ids?.split(',').map((id: string) => Number(id)) || []
 
   try {
     const questionIds = await prisma.question.findMany({
@@ -29,7 +29,7 @@ export default async function handler(
       where: {
         NOT: {
           id: {
-            in: read_ids,
+            in: r_ids,
           },
         },
       },

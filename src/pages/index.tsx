@@ -6,10 +6,12 @@ import MoonLoader from 'react-spinners/MoonLoader'
 import QuestionCard from 'src/components/QuestionCard'
 import BackCard from 'src/components/BackCard'
 import Footer from 'src/components/Footer'
+import EmptyResult from 'src/components/EmptyResult'
 import { Question } from 'src/common/types'
 
 const FLIP_DURATION = 0.5
 const FLIP_DEGREE = 180
+const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -24,19 +26,18 @@ const Home = () => {
   }, [])
 
   const handleReadIds = (questionId: number) => {
-    const readQuestionIds: string = localStorage.getItem('read_ids') || ''
+    const readQuestionIds: string = localStorage.getItem('r_ids') || ''
     if (readQuestionIds.length > 0) {
-      localStorage.setItem(
-        'read_ids',
-        readQuestionIds + ',' + String(questionId)
-      )
+      localStorage.setItem('r_ids', readQuestionIds + ',' + String(questionId))
     } else {
-      localStorage.setItem('read_ids', String(questionId))
+      localStorage.setItem('r_ids', String(questionId))
     }
   }
 
   const toggleCard = () => {
-    setIsOpen((state) => !state)
+    if (!questionFetch.isLoading) {
+      setIsOpen((state) => !state)
+    }
   }
 
   const handleQuestionFetch = () => {
@@ -52,18 +53,20 @@ const Home = () => {
 
   const getNewCard = () => {
     toggleCard()
-    handleQuestionFetch()
+    if (isOpen) {
+      handleQuestionFetch()
+    }
   }
 
   const startOver = () => {
-    localStorage.setItem('read_ids', '')
+    localStorage.setItem('r_ids', '')
     handleQuestionFetch()
   }
 
   const fetchQuestion = async () => {
     try {
-      const read_ids: string = localStorage.getItem('read_ids') || ''
-      const respone = await fetch(`/api/questions/random?read_ids=${read_ids}`)
+      const r_ids: string = localStorage.getItem('r_ids') || ''
+      const respone = await fetch(`/api/questions/random?r_ids=${r_ids}`)
       const responseJSON = await respone.json()
       handleReadIds(responseJSON.data.id)
 
@@ -76,68 +79,74 @@ const Home = () => {
       setQuestionFetch({
         isLoading: false,
         data: {} as Question,
-        error: 'Ada yang salah nih. Coba di-refresh, ya.',
+        error: ERROR_MESSAGE,
       })
     }
   }
 
+  const isCardReady = () => {
+    return !questionFetch.isLoading && !isOpen
+  }
+
+  const isCardEmpty = () => {
+    return (
+      Object.keys(questionFetch.data).length === 0 && !questionFetch.isLoading
+    )
+  }
+
   return (
-    <div className='container flex flex-col justify-items-center items-center'>
+    <div className='container grid grid-rows-3 h-screen justify-items-center items-center'>
       <Head>
         <title>Ceritakan</title>
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
+        />
         <meta
           name='description'
           content='Ceritakan adalah sebuah platform pertanyaan terbuka'
         />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className='relative bottom-1/4'>
-        {Object.keys(questionFetch.data).length === 0 &&
-        !questionFetch.isLoading ? (
-          <div className='custom-flex-center flex-col'>
-            <p className='my-3'>{'Maaf, kartunya sudah habis ☹️'}</p>
-            <button className='p-3 text-white bg-blue-500 rounded-lg font-medium'>
-              <span className='text-white' onClick={startOver}>
-                Mulai lagi
-              </span>
-            </button>
+      {isCardEmpty() ? (
+        <div className='relative row-span-2'>
+          <EmptyResult startOver={startOver} />
+        </div>
+      ) : (
+        <div className='relative row-span-2 card-dimension'>
+          <div className='absolute cursor-pointer' onClick={toggleCard}>
+            <motion.div
+              className='relative backface-invisible'
+              initial={{ rotateY: isOpen ? FLIP_DEGREE : 0 }}
+              animate={{ rotateY: isOpen ? FLIP_DEGREE : 0 }}
+              transition={{ duration: FLIP_DURATION }}
+            >
+              <div className='absolute w-full h-full flex justify-center items-end pb-9'>
+                {isCardReady() ? (
+                  <button className='sonar'></button>
+                ) : (
+                  <MoonLoader
+                    color='#fff'
+                    loading={questionFetch.isLoading}
+                    size={40}
+                  />
+                )}
+              </div>
+              <BackCard />
+            </motion.div>
           </div>
-        ) : (
-          <Fragment>
-            <div className='absolute cursor-pointer'>
-              <motion.div
-                className='relative backface-invisible'
-                onTapStart={!questionFetch.isLoading ? toggleCard : undefined}
-                initial={{ rotateY: isOpen ? FLIP_DEGREE : 0 }}
-                animate={{ rotateY: isOpen ? FLIP_DEGREE : 0 }}
-                transition={{ duration: FLIP_DURATION }}
-              >
-                <div className='absolute w-full h-full flex justify-center items-end pb-9'>
-                  {!questionFetch.isLoading && !isOpen ? (
-                    <button className='sonar'></button>
-                  ) : (
-                    <MoonLoader
-                      color='#fff'
-                      loading={questionFetch.isLoading}
-                      size={40}
-                    />
-                  )}
-                </div>
-                <BackCard />
-              </motion.div>
-            </div>
+          <div className='absolute cursor-pointer' onClick={getNewCard}>
             <motion.div
               className='relative backface-invisible cursor-pointer'
-              onTapStart={getNewCard}
               initial={{ rotateY: isOpen ? 0 : FLIP_DEGREE }}
               animate={{ rotateY: isOpen ? 0 : FLIP_DEGREE }}
               transition={{ duration: FLIP_DURATION }}
             >
               <QuestionCard question={questionFetch.data} />
             </motion.div>
-          </Fragment>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </div>
   )

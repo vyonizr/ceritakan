@@ -58,3 +58,7 @@
 a {
   text-decoration: underline;
 }
+
+.card-dimension {
+  @apply w-72 h-96;
+}
