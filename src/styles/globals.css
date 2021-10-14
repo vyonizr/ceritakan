@@ -54,3 +54,7 @@
 .backface-invisible {
   backface-visibility: hidden;
 }
+
+a {
+  text-decoration: underline;
+}

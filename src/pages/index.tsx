@@ -5,6 +5,7 @@ import MoonLoader from 'react-spinners/MoonLoader'
 
 import QuestionCard from 'src/components/QuestionCard'
 import BackCard from 'src/components/BackCard'
+import Footer from 'src/components/Footer'
 import { Question } from 'src/common/types'
 
 const FLIP_DURATION = 0.5
@@ -137,6 +138,7 @@ const Home = () => {
           </Fragment>
         )}
       </div>
+      <Footer />
     </div>
   )
 }
