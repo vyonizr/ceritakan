@@ -104,7 +104,7 @@ const Home = () => {
           </div>
         ) : (
           <Fragment>
-            <div className='absolute'>
+            <div className='absolute cursor-pointer'>
               <motion.div
                 className='relative backface-invisible'
                 onTapStart={!questionFetch.isLoading ? toggleCard : undefined}
@@ -127,7 +127,7 @@ const Home = () => {
               </motion.div>
             </div>
             <motion.div
-              className='relative backface-invisible'
+              className='relative backface-invisible cursor-pointer'
               onTapStart={getNewCard}
               initial={{ rotateY: isOpen ? 0 : FLIP_DEGREE }}
               animate={{ rotateY: isOpen ? 0 : FLIP_DEGREE }}
