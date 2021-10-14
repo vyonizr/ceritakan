@@ -19,12 +19,6 @@ export interface Topic {
   updated_at?: string
 }
 
-export interface HomePageProps {
-  children?: ReactNode
-  question: Question
-  errorMessage: string | null
-}
-
 export interface ErrorPayload {
   name: string
   statusCode: number

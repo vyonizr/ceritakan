@@ -3,15 +3,14 @@ import Head from 'next/head'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
 
-import { server } from 'src/config'
 import QuestionCard from 'src/components/QuestionCard'
 import BackCard from 'src/components/BackCard'
-import { HomePageProps, Question } from 'src/common/types'
+import { Question } from 'src/common/types'
 
 const FLIP_DURATION = 0.5
 const FLIP_DEGREE = 180
 
-const Home = ({ question }: HomePageProps) => {
+const Home = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [questionFetch, setQuestionFetch] = useState({
     isLoading: false,
@@ -20,13 +19,7 @@ const Home = ({ question }: HomePageProps) => {
   })
 
   useEffect(() => {
-    handleReadIds(question.id)
-
-    setQuestionFetch({
-      isLoading: false,
-      data: question,
-      error: '',
-    })
+    handleQuestionFetch()
   }, [])
 
   const handleReadIds = (questionId: number) => {
@@ -68,7 +61,8 @@ const Home = ({ question }: HomePageProps) => {
 
   const fetchQuestion = async () => {
     try {
-      const respone = await fetch('/api/questions/random')
+      const read_ids: string = localStorage.getItem('read_ids') || ''
+      const respone = await fetch(`/api/questions/random?read_ids=${read_ids}`)
       const responseJSON = await respone.json()
       handleReadIds(responseJSON.data.id)
 
@@ -81,7 +75,7 @@ const Home = ({ question }: HomePageProps) => {
       setQuestionFetch({
         isLoading: false,
         data: {} as Question,
-        error: 'Terjadi kesalahan. Silakan reload halaman.',
+        error: 'Ada yang salah nih. Coba di-refresh, ya.',
       })
     }
   }
@@ -145,27 +139,6 @@ const Home = ({ question }: HomePageProps) => {
       </div>
     </div>
   )
-}
-
-export const getServerSideProps = async () => {
-  try {
-    const response = await fetch(`${server}/questions/random`)
-    const responseJSON = await response.json()
-
-    return {
-      props: {
-        question: responseJSON.data,
-        errorMessage: null,
-      },
-    }
-  } catch (error) {
-    return {
-      props: {
-        question: null,
-        errorMessage: 'Ada yang salah nih. Coba di-refresh, ya.',
-      },
-    }
-  }
 }
 
 export default Home
