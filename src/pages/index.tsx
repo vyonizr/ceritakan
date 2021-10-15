@@ -1,5 +1,6 @@
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
 
@@ -8,12 +9,18 @@ import BackCard from 'src/components/BackCard'
 import Footer from 'src/components/Footer'
 import EmptyResult from 'src/components/EmptyResult'
 import { Question } from 'src/common/types'
+import { TOUR_STEPS } from 'src/common/constants'
+import { ACTIONS, LIFECYCLE } from 'react-joyride'
 
 const FLIP_DURATION = 0.5
 const FLIP_DEGREE = 180
 const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
 
+const Joyride = dynamic(() => import('react-joyride'), { ssr: false })
+
 const Home = () => {
+  const [run, setRun] = useState(false)
+  const [stepIndex, setStepIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [questionFetch, setQuestionFetch] = useState({
     isLoading: false,
@@ -22,8 +29,13 @@ const Home = () => {
   })
 
   useEffect(() => {
+    setRun(isProductTourNotCompleted())
     handleQuestionFetch()
   }, [])
+
+  const isProductTourNotCompleted = () => {
+    return localStorage.getItem('pt') !== '1'
+  }
 
   const handleReadIds = (questionId: number) => {
     const readQuestionIds: string = localStorage.getItem('r_ids') || ''
@@ -34,9 +46,23 @@ const Home = () => {
     }
   }
 
+  const handleJoyrideCallback = (data: any) => {
+    const { action, index, lifecycle } = data
+
+    const isFirstStepDone =
+      index === 0 &&
+      action === ACTIONS.CLOSE &&
+      lifecycle === LIFECYCLE.COMPLETE
+
+    if (isFirstStepDone) {
+      setRun(false)
+    }
+  }
+
   const toggleCard = () => {
     if (!questionFetch.isLoading) {
       setIsOpen((state) => !state)
+      setStepIndex((state) => state + 1)
     }
   }
 
@@ -52,6 +78,11 @@ const Home = () => {
   }
 
   const getNewCard = () => {
+    if (stepIndex === 1 && isProductTourNotCompleted()) {
+      // Product tour is done
+      localStorage.setItem('pt', '1')
+    }
+
     toggleCard()
     if (isOpen) {
       handleQuestionFetch()
@@ -113,7 +144,7 @@ const Home = () => {
           <EmptyResult startOver={startOver} />
         </div>
       ) : (
-        <div className='relative row-span-2 card-dimension'>
+        <div className='relative row-span-2 card-dimension tour-open-card'>
           <div className='absolute cursor-pointer' onClick={toggleCard}>
             <motion.div
               className='relative backface-invisible'
@@ -148,6 +179,18 @@ const Home = () => {
         </div>
       )}
       <Footer />
+      <Joyride
+        callback={handleJoyrideCallback}
+        steps={TOUR_STEPS}
+        run={run}
+        stepIndex={stepIndex}
+        styles={{ options: { primaryColor: '#3B82F6' } }}
+        disableOverlay
+        hideBackButton
+        locale={{
+          close: 'Tutup',
+        }}
+      />
     </div>
   )
 }
