@@ -11,12 +11,16 @@ import EmptyResult from 'src/components/EmptyResult'
 import { Question } from 'src/common/types'
 import { TOUR_STEPS } from 'src/common/constants'
 import { ACTIONS, LIFECYCLE } from 'react-joyride'
+import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
 
 const FLIP_DURATION = 0.5
 const FLIP_DEGREE = 180
+const MAX_ROTATE_DEGREE = 1
+const MIN_ROTATE_DEGREE = 0 - MAX_ROTATE_DEGREE
 const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
 
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false })
+const initialDegree = getRandomFloat(MIN_ROTATE_DEGREE, MAX_ROTATE_DEGREE)
 
 const Home = () => {
   const [run, setRun] = useState(false)
@@ -27,6 +31,9 @@ const Home = () => {
     data: {} as Question,
     error: '',
   })
+  const [rotateDegree, setRotateDegree] = useState(
+    getRandomIntInclusive(MIN_ROTATE_DEGREE, MAX_ROTATE_DEGREE)
+  )
 
   useEffect(() => {
     setRun(isProductTourNotCompleted())
@@ -61,6 +68,19 @@ const Home = () => {
 
   const toggleCard = () => {
     if (!questionFetch.isLoading) {
+      let newRotateDegree = getRandomIntInclusive(
+        MIN_ROTATE_DEGREE,
+        MAX_ROTATE_DEGREE
+      )
+
+      while (newRotateDegree === rotateDegree) {
+        newRotateDegree = getRandomIntInclusive(
+          MIN_ROTATE_DEGREE,
+          MAX_ROTATE_DEGREE
+        )
+      }
+
+      setRotateDegree(newRotateDegree)
       setIsOpen((state) => !state)
       setStepIndex((state) => state + 1)
     }
@@ -145,8 +165,14 @@ const Home = () => {
           <div className='absolute cursor-pointer' onClick={toggleCard}>
             <motion.div
               className='relative backface-invisible'
-              initial={{ rotateY: isOpen ? FLIP_DEGREE : 0 }}
-              animate={{ rotateY: isOpen ? FLIP_DEGREE : 0 }}
+              initial={{
+                rotateY: isOpen ? FLIP_DEGREE : 0,
+                rotate: initialDegree,
+              }}
+              animate={{
+                rotateY: isOpen ? FLIP_DEGREE : 0,
+                rotate: rotateDegree,
+              }}
               transition={{ duration: FLIP_DURATION }}
             >
               <div className='absolute w-full h-full flex justify-center items-end pb-9'>
@@ -166,8 +192,14 @@ const Home = () => {
           <div className='absolute cursor-pointer' onClick={getNewCard}>
             <motion.div
               className='relative backface-invisible cursor-pointer'
-              initial={{ rotateY: isOpen ? 0 : FLIP_DEGREE }}
-              animate={{ rotateY: isOpen ? 0 : FLIP_DEGREE }}
+              initial={{
+                rotateY: isOpen ? 0 : FLIP_DEGREE,
+                rotate: initialDegree,
+              }}
+              animate={{
+                rotateY: isOpen ? 0 : FLIP_DEGREE,
+                rotate: rotateDegree,
+              }}
               transition={{ duration: FLIP_DURATION }}
             >
               <QuestionCard question={questionFetch.data} />
