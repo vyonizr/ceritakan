@@ -9,7 +9,7 @@ const Footer: React.FC = () => (
         vyonizr
       </a>
     </Link>
-    . Some contents originated from{' '}
+    . Beberapa konten berasal dari{' '}
     <Link href='https://www.instagram.com/kartueksplorasa/' passHref>
       <a target='_blank' rel='noreferrer noopener'>
         Eksplorasa™ - The Game
