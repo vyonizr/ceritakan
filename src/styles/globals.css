@@ -10,7 +10,7 @@
 }
 
 .custom-flex-center {
-  @apply flex justify-center items-center;
+  @apply flex items-center justify-center;
 }
 
 .sonar {
@@ -61,4 +61,12 @@ a {
 
 .card-dimension {
   @apply w-72 h-96;
+}
+
+.react-joyride__tooltip > div:nth-child(2) {
+  display: none !important;
+}
+
+.react-joyride__tooltip > div:first-child > h4 {
+  font-weight: 500;
 }
