@@ -129,10 +129,7 @@ const Home = () => {
     <div className='container grid grid-rows-3 h-screen justify-items-center items-center'>
       <Head>
         <title>Ceritakan</title>
-        <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
-        />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
         <meta
           name='description'
           content='Ceritakan adalah sebuah platform pertanyaan terbuka'
@@ -154,7 +151,7 @@ const Home = () => {
             >
               <div className='absolute w-full h-full flex justify-center items-end pb-9'>
                 {isCardReady() ? (
-                  <button className='sonar'></button>
+                  <button aria-label={'Open card'} className='sonar'></button>
                 ) : (
                   <MoonLoader
                     color='#fff'
