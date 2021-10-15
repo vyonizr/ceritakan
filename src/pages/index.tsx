@@ -146,7 +146,7 @@ const Home = () => {
   }
 
   return (
-    <div className='container grid grid-rows-3 h-screen justify-items-center items-center'>
+    <div className='container grid items-center h-screen grid-rows-3 justify-items-center'>
       <Head>
         <title>Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -175,7 +175,7 @@ const Home = () => {
               }}
               transition={{ duration: FLIP_DURATION }}
             >
-              <div className='absolute w-full h-full flex justify-center items-end pb-9'>
+              <div className='absolute flex items-end justify-center w-full h-full pb-9'>
                 {isCardReady() ? (
                   <button aria-label={'Open card'} className='sonar'></button>
                 ) : (
@@ -191,7 +191,7 @@ const Home = () => {
           </div>
           <div className='absolute cursor-pointer' onClick={getNewCard}>
             <motion.div
-              className='relative backface-invisible cursor-pointer'
+              className='relative cursor-pointer backface-invisible'
               initial={{
                 rotateY: isOpen ? 0 : FLIP_DEGREE,
                 rotate: initialDegree,
@@ -213,12 +213,15 @@ const Home = () => {
         steps={TOUR_STEPS}
         run={run}
         stepIndex={stepIndex}
-        styles={{ options: { primaryColor: '#3B82F6' } }}
+        styles={{
+          options: { primaryColor: '#3B82F6' },
+          buttonNext: {
+            display: 'none',
+          },
+        }}
         disableOverlay
         hideBackButton
-        locale={{
-          close: 'Tutup',
-        }}
+        disableCloseOnEsc
       />
     </div>
   )

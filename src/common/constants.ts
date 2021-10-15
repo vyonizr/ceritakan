@@ -1,14 +1,13 @@
 export const TOUR_STEPS = [
   {
     target: '.tour-open-card',
-    content: 'Tap kartu untuk membuka pertanyaan',
+    content: 'Silakan tap kartu untuk membuka pertanyaan',
     disableBeacon: true,
-    hideCloseButton: true,
+    title: 'Selamat datang!',
   },
   {
     target: '.tour-open-card',
     content: 'Tap kartunya lagi untuk mendapatkan pertanyaan baru',
     disableBeacon: true,
-    hideCloseButton: true,
   },
 ]
