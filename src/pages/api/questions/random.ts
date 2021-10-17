@@ -48,6 +48,7 @@ export default async function handler(
         select: {
           id: true,
           question: true,
+          topic: true,
         },
         where: {
           id: randomId,

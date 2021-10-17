@@ -34,6 +34,7 @@ export default async function handler(
             select: {
               id: true,
               name: true,
+              icon: true,
             },
           },
         },
@@ -53,7 +54,6 @@ export default async function handler(
       })
     }
   } catch (error: any) {
-    console.log(error)
     if (error.name === 'CustomError') {
       return res.status(error.statusCode).json({
         status: 'fail',
