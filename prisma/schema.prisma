@@ -1,7 +1,6 @@
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -10,7 +9,8 @@ generator client {
 
 model Topic {
   id         Int        @id @default(autoincrement())
-  name       String
+  name       String     @unique
+  icon       String     @default("🌐")
   questions  Question[]
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now()) @updatedAt

@@ -3,24 +3,25 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
-
-import QuestionCard from 'src/components/QuestionCard'
-import BackCard from 'src/components/BackCard'
-import Footer from 'src/components/Footer'
-import EmptyResult from 'src/components/EmptyResult'
-import { Question } from 'src/common/types'
-import { TOUR_STEPS } from 'src/common/constants'
 import { ACTIONS, LIFECYCLE } from 'react-joyride'
+
+import { QuestionCard, BackCard, Footer, EmptyResult } from 'src/components/'
+import { Question } from 'src/common/types'
+import {
+  TOUR_STEPS,
+  CARD_FLIP_DURATION,
+  CARD_FLIP_DEGREE,
+  CARD_MAX_ROTATE_DEGREE,
+  CARD_MIN_ROTATE_DEGREE,
+  ERROR_MESSAGE,
+} from 'src/common/constants'
 import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
 
-const FLIP_DURATION = 0.5
-const FLIP_DEGREE = 180
-const MAX_ROTATE_DEGREE = 1
-const MIN_ROTATE_DEGREE = 0 - MAX_ROTATE_DEGREE
-const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
-
 const Joyride = dynamic(() => import('react-joyride'), { ssr: false })
-const initialDegree = getRandomFloat(MIN_ROTATE_DEGREE, MAX_ROTATE_DEGREE)
+const initialDegree = getRandomFloat(
+  CARD_MIN_ROTATE_DEGREE,
+  CARD_MAX_ROTATE_DEGREE
+)
 
 const Home = () => {
   const [run, setRun] = useState(false)
@@ -32,7 +33,7 @@ const Home = () => {
     error: '',
   })
   const [rotateDegree, setRotateDegree] = useState(
-    getRandomIntInclusive(MIN_ROTATE_DEGREE, MAX_ROTATE_DEGREE)
+    getRandomIntInclusive(CARD_MIN_ROTATE_DEGREE, CARD_MAX_ROTATE_DEGREE)
   )
 
   useEffect(() => {
@@ -69,14 +70,14 @@ const Home = () => {
   const toggleCard = () => {
     if (!questionFetch.isLoading) {
       let newRotateDegree = getRandomIntInclusive(
-        MIN_ROTATE_DEGREE,
-        MAX_ROTATE_DEGREE
+        CARD_MIN_ROTATE_DEGREE,
+        CARD_MAX_ROTATE_DEGREE
       )
 
       while (newRotateDegree === rotateDegree) {
         newRotateDegree = getRandomIntInclusive(
-          MIN_ROTATE_DEGREE,
-          MAX_ROTATE_DEGREE
+          CARD_MIN_ROTATE_DEGREE,
+          CARD_MAX_ROTATE_DEGREE
         )
       }
 
@@ -117,8 +118,8 @@ const Home = () => {
   const fetchQuestion = async () => {
     try {
       const r_ids: string = localStorage.getItem('r_ids') || ''
-      const respone = await fetch(`/api/questions/random?r_ids=${r_ids}`)
-      const responseJSON = await respone.json()
+      const response = await fetch(`/api/questions/random?r_ids=${r_ids}`)
+      const responseJSON = await response.json()
       handleReadIds(responseJSON.data.id)
 
       setQuestionFetch({
@@ -146,7 +147,7 @@ const Home = () => {
   }
 
   return (
-    <div className='container grid items-center h-screen grid-rows-3 justify-items-center'>
+    <div className='container grid items-end h-screen grid-rows-3 justify-items-center'>
       <Head>
         <title>Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -166,14 +167,14 @@ const Home = () => {
             <motion.div
               className='relative backface-invisible'
               initial={{
-                rotateY: isOpen ? FLIP_DEGREE : 0,
+                rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
                 rotate: initialDegree,
               }}
               animate={{
-                rotateY: isOpen ? FLIP_DEGREE : 0,
+                rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
                 rotate: rotateDegree,
               }}
-              transition={{ duration: FLIP_DURATION }}
+              transition={{ duration: CARD_FLIP_DURATION }}
             >
               <div className='absolute flex items-end justify-center w-full h-full pb-9'>
                 {isCardReady() ? (
@@ -193,14 +194,14 @@ const Home = () => {
             <motion.div
               className='relative cursor-pointer backface-invisible'
               initial={{
-                rotateY: isOpen ? 0 : FLIP_DEGREE,
+                rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
                 rotate: initialDegree,
               }}
               animate={{
-                rotateY: isOpen ? 0 : FLIP_DEGREE,
+                rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
                 rotate: rotateDegree,
               }}
-              transition={{ duration: FLIP_DURATION }}
+              transition={{ duration: CARD_FLIP_DURATION }}
             >
               <QuestionCard question={questionFetch.data} />
             </motion.div>
