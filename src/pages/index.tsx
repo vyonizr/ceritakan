@@ -117,8 +117,8 @@ const Home = () => {
   const fetchQuestion = async () => {
     try {
       const r_ids: string = localStorage.getItem('r_ids') || ''
-      const respone = await fetch(`/api/questions/random?r_ids=${r_ids}`)
-      const responseJSON = await respone.json()
+      const response = await fetch(`/api/questions/random?r_ids=${r_ids}`)
+      const responseJSON = await response.json()
       handleReadIds(responseJSON.data.id)
 
       setQuestionFetch({
