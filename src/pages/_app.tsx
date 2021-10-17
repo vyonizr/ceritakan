@@ -11,6 +11,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
 
   useEffect(() => {
+    const vh = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', `${vh}px`)
+
     const handleRouteChange = (url: string) => {
       gtag.pageview(url)
     }

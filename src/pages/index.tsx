@@ -147,7 +147,7 @@ const Home = () => {
   }
 
   return (
-    <div className='container grid items-center h-screen grid-rows-3 justify-items-center'>
+    <div className='container grid items-end h-screen grid-rows-3 justify-items-center'>
       <Head>
         <title>Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
