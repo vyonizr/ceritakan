@@ -1,3 +1,9 @@
+export const SITE_TITLE = 'Ceritakan'
+export const SITE_URL = 'https://ceritakan.vyonizr.com/'
+export const SITE_DESCRIPTION =
+  'Ceritakan adalah sebuah platform pertanyaan terbuka'
+export const OG_IMAGE_URL = '/images/ceritakan_og.jpg'
+
 export const TOUR_STEPS = [
   {
     target: '.tour-open-card',
