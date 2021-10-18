@@ -150,12 +150,6 @@ const Home = () => {
     <div className='container grid items-end h-screen grid-rows-3 justify-items-center'>
       <Head>
         <title>Ceritakan</title>
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <meta
-          name='description'
-          content='Ceritakan adalah sebuah platform pertanyaan terbuka'
-        />
-        <link rel='icon' href='/favicon.ico' />
       </Head>
       {isCardEmpty() ? (
         <div className='relative row-span-2'>
