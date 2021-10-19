@@ -24,7 +24,6 @@ class MyDocument extends Document {
       <Html lang='id'>
         <Head>
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-          <meta name='viewport' content='width=device-width, initial-scale=1' />
           <meta name='description' content={SITE_DESCRIPTION} />
           <meta name='keywords' content='card game' />
           <link rel='manifest' href='/manifest.json' />
