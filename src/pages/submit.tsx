@@ -1,27 +1,37 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import SyncLoader from 'react-spinners/SyncLoader'
 import { Topic } from 'src/common/types'
+import { REGEX_URL } from 'src/helpers/regex'
+import styles from 'src/styles/Submit.module.css'
+import {
+  MINIMUM_QUESTION_LENGTH,
+  MAXIMUM_QUESTION_LENGTH,
+  MAXIMUM_NAME_LENGTH,
+} from 'src/common/constants'
 
 const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
-const MINIMUM_QUESTION_LENGTH = 20
-const MAXIMUM_QUESTION_LENGTH = 100
-const MAXIMUM_NAME_LENGTH = 15
 
 type Inputs = {
   selectedTopicId: string
   question: string
   submitAs: string
   name?: string
-  socialURL: string
+  socialURL?: string
 }
 
 const Submit = () => {
   const [topics, setTopics] = useState({
-    isLoading: false,
+    isLoading: true,
     data: [] as Topic[],
+    error: '',
+  })
+  const [submitStatus, setSubmitStatus] = useState({
+    isComplete: false,
+    isLoading: false,
     error: '',
   })
 
@@ -34,22 +44,48 @@ const Submit = () => {
     defaultValues: {
       selectedTopicId: '',
       question: '',
-      submitAs: 'anonymous',
+      submitAs: 'ANONYMOUS',
       name: '',
       socialURL: '',
     },
   })
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    try {
+      setSubmitStatus((state) => ({ ...state, isLoading: true }))
+      const { selectedTopicId, question, submitAs, name, socialURL } = data
+      const body = {
+        topic_id: selectedTopicId,
+        question,
+        submit_as: submitAs,
+        name,
+        social_url: socialURL,
+      }
+
+      const response = await fetch('/api/submissions', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      })
+      const responseJSON = await response.json()
+      if (responseJSON) {
+        setSubmitStatus({
+          isComplete: true,
+          isLoading: false,
+          error: '',
+        })
+      }
+    } catch (error) {
+      setSubmitStatus({
+        isComplete: false,
+        isLoading: false,
+        error: 'Terjadi kesalahan saat mengirim. Coba lagi, ya.',
+      })
+    }
+  }
 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        setTopics((state) => ({
-          ...state,
-          isLoading: true,
-        }))
-
         const response = await fetch('/api/topics')
         const responseJSON = await response.json()
         setTopics({
@@ -73,25 +109,50 @@ const Submit = () => {
     return <small className='text-red-400'>{message}</small>
   }
 
+  const isFormValid = () => {
+    return Object.keys(errors).length === 0
+  }
+
+  const isPageLoading = () => {
+    return topics.isLoading || submitStatus.isLoading
+  }
+
   return (
-    <div className='h-screen w-72 custom-flex-center'>
+    <div className='flex-col h-screen w-72 custom-flex-center'>
       <Head>
         <title>Buat Pertanyaan | Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      {topics.isLoading && (
+      {submitStatus.isComplete && (
+        <>
+          <h1 className='text-4xl text-center'>Terima kasih!</h1>
+          <h2 className='text-lg text-center'>
+            Kiriman kamu akan kami cek terlebih dahulu.
+          </h2>
+          <Link href='/'>
+            <button className={`${styles['submit-button']}`}>
+              Kembali ke halaman utama
+            </button>
+          </Link>
+        </>
+      )}
+      {!submitStatus.isComplete && isPageLoading() && (
         <div>
-          <SyncLoader color='#60A5FA' loading={topics.isLoading} size={16} />
+          <SyncLoader
+            color='#60A5FA'
+            loading={topics.isLoading || submitStatus.isLoading}
+            size={16}
+          />
         </div>
       )}
-      {!topics.isLoading && (
+      {!submitStatus.isComplete && !isPageLoading() && (
         <motion.div
           initial={{ opacity: 0 }}
           exit={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25 }}
-          className='container flex-col custom-flex-center'
+          className='container flex-col self-start pt-12 custom-flex-center'
         >
           <h1 className='mb-5 text-3xl'>Buat Pertanyaan</h1>
           <form
@@ -119,10 +180,11 @@ const Submit = () => {
                   <textarea
                     className='block w-full rounded resize-none p-3border-blue-900 form-textarea'
                     placeholder='Tulis pertanyaanmu di sini'
+                    autoComplete='off'
                     {...register('question', {
                       required: {
                         value: true,
-                        message: 'Kamu harus mengisi pertanyaan',
+                        message: 'Kamu harus mengisi pertanyaannya',
                       },
                       minLength: {
                         value: MINIMUM_QUESTION_LENGTH,
@@ -140,14 +202,14 @@ const Submit = () => {
                 </div>
                 <span>Kirim sebagai:</span>
                 <select
-                  defaultValue='anonymous'
+                  defaultValue='ANONYMOUS'
                   className='rounded form-select'
                   {...register('submitAs')}
                 >
-                  <option value='anonymous'>😶 Anonim</option>
-                  <option value='user'>😄 Non-Anonim</option>
+                  <option value='ANONYMOUS'>😶 Anonim</option>
+                  <option value='IDENTIFIED'>😄 Non-Anonim</option>
                 </select>
-                {watch('submitAs') !== 'anonymous' && (
+                {watch('submitAs') !== 'ANONYMOUS' && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     exit={{ opacity: 0 }}
@@ -160,9 +222,10 @@ const Submit = () => {
                         type='text'
                         className='container rounded form-input'
                         placeholder='Nama kamu'
+                        autoComplete='off'
                         {...register('name', {
                           required: {
-                            value: watch('submitAs') !== 'anonymous',
+                            value: watch('submitAs') !== 'ANONYMOUS',
                             message: 'Kamu harus memasukkan nama kamu',
                           },
                           maxLength: {
@@ -179,16 +242,32 @@ const Submit = () => {
                       type='text'
                       className='container rounded form-input'
                       placeholder='Link sosmed (opsional)'
-                      {...register('socialURL')}
+                      autoComplete='off'
+                      {...register('socialURL', {
+                        pattern: {
+                          value: REGEX_URL,
+                          message: `Contoh link: "https://twitter.com/twitter" (tanpa tanda kutip)`,
+                        },
+                      })}
                     />
+                    {errors.socialURL && (
+                      <ErrorMessage message={errors.socialURL.message} />
+                    )}
                   </motion.div>
                 )}
                 <button
                   type='submit'
-                  className='container self-end p-2 mt-5 font-medium text-white bg-blue-500 rounded disabled:opacity-0'
+                  className={
+                    isFormValid()
+                      ? styles['submit-button']
+                      : `${styles['submit-button']} cursor-not-allowed opacity-50`
+                  }
                 >
                   Kirim
                 </button>
+                {submitStatus.error.length > 0 && (
+                  <ErrorMessage message={submitStatus.error} />
+                )}
               </>
             )}
           </form>

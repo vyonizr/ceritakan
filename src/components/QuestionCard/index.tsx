@@ -4,11 +4,11 @@ import BaseCard from 'src/components/BaseCard'
 
 const Card: React.FC<CardProps> = ({ question }: CardProps) => (
   <BaseCard>
-    <div className='custom-flex-center relative rounded-2xl border-2 border-blue-900 w-full h-full p-4'>
-      <p className='absolute top-4 right-0 w-full text-center text-3xl text-gray-700 font-roustel'>
+    <div className='relative w-full h-full p-4 border-2 border-blue-900 custom-flex-center rounded-2xl'>
+      <p className='absolute right-0 w-full text-3xl text-center text-gray-700 select-none top-4 font-roustel'>
         Ceritakan
       </p>
-      <p className='text-gray-700 text-center subpixel-antialiased'>
+      <p className='subpixel-antialiased text-center text-gray-700 select-none'>
         {question.question}
       </p>
     </div>
