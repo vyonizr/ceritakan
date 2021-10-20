@@ -205,17 +205,17 @@ const Home = () => {
         </div>
       )}
       <div className={'grid h-full grid-rows-2'}>
-        <Link href='/submit'>
-          <motion.a
-            className='mt-10 text-center'
-            initial={{ opacity: isOpen ? 1 : 0 }}
-            exit={{ opacity: isOpen ? 0 : 1 }}
-            animate={{ opacity: isOpen ? 0 : 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            Ingin pertanyaan kamu muncul di sini?
-          </motion.a>
-        </Link>
+        <motion.p
+          className='mt-10 text-center'
+          initial={{ opacity: isOpen ? 1 : 0 }}
+          exit={{ opacity: isOpen ? 0 : 1 }}
+          animate={{ opacity: isOpen ? 0 : 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Link href='/submit'>
+            <a>Ingin pertanyaan kamu muncul di sini?</a>
+          </Link>
+        </motion.p>
         <div className='self-end mb-6'>
           <Footer />
         </div>
