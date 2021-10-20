@@ -27,3 +27,6 @@ export const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
 export const MINIMUM_QUESTION_LENGTH = 15
 export const MAXIMUM_QUESTION_LENGTH = 100
 export const MAXIMUM_NAME_LENGTH = 15
+
+export const ANONYMOUS = 'ANONYMOUS'
+export const IDENTIFIED = 'IDENTIFIED'

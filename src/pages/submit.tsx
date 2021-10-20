@@ -11,6 +11,9 @@ import {
   MINIMUM_QUESTION_LENGTH,
   MAXIMUM_QUESTION_LENGTH,
   MAXIMUM_NAME_LENGTH,
+  ANONYMOUS,
+  IDENTIFIED,
+  SITE_TITLE,
 } from 'src/common/constants'
 
 const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
@@ -21,6 +24,21 @@ type Inputs = {
   submitAs: string
   name?: string
   socialURL?: string
+}
+
+const questionValidator = {
+  required: {
+    value: true,
+    message: 'Kamu harus mengisi pertanyaannya',
+  },
+  minLength: {
+    value: MINIMUM_QUESTION_LENGTH,
+    message: `Pertanyaanmu tidak boleh kurang dari ${MINIMUM_QUESTION_LENGTH} karakter`,
+  },
+  maxLength: {
+    value: MAXIMUM_QUESTION_LENGTH,
+    message: `Pertanyaanmu tidak boleh lebih dari ${MAXIMUM_QUESTION_LENGTH} karakter`,
+  },
 }
 
 const Submit = () => {
@@ -44,7 +62,7 @@ const Submit = () => {
     defaultValues: {
       selectedTopicId: '',
       question: '',
-      submitAs: 'ANONYMOUS',
+      submitAs: ANONYMOUS,
       name: '',
       socialURL: '',
     },
@@ -117,14 +135,17 @@ const Submit = () => {
     return topics.isLoading || submitStatus.isLoading
   }
 
+  const isSubmissionCompleted = () => {
+    return submitStatus.isComplete
+  }
+
   return (
-    <div className='flex-col h-screen w-72 custom-flex-center'>
+    <div className='grid items-center h-screen w-72'>
       <Head>
-        <title>Buat Pertanyaan | Ceritakan</title>
+        <title>{`Buat Pertanyaan | ${SITE_TITLE}`}</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <link rel='icon' href='/favicon.ico' />
       </Head>
-      {submitStatus.isComplete && (
+      {isSubmissionCompleted() && (
         <>
           <h1 className='text-4xl text-center'>Terima kasih!</h1>
           <h2 className='text-lg text-center'>
@@ -137,22 +158,18 @@ const Submit = () => {
           </Link>
         </>
       )}
-      {!submitStatus.isComplete && isPageLoading() && (
-        <div>
-          <SyncLoader
-            color='#60A5FA'
-            loading={topics.isLoading || submitStatus.isLoading}
-            size={16}
-          />
+      {!isSubmissionCompleted() && isPageLoading() && (
+        <div className='self-center justify-self-center'>
+          <SyncLoader color='#60A5FA' loading={isPageLoading()} size={16} />
         </div>
       )}
-      {!submitStatus.isComplete && !isPageLoading() && (
+      {!isSubmissionCompleted() && !isPageLoading() && (
         <motion.div
           initial={{ opacity: 0 }}
           exit={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25 }}
-          className='container flex-col self-start pt-12 custom-flex-center'
+          className='container flex-col self-start mt-12 custom-flex-center'
         >
           <h1 className='mb-5 text-3xl'>Buat Pertanyaan</h1>
           <form
@@ -178,23 +195,10 @@ const Submit = () => {
               <>
                 <div className='container mb-4'>
                   <textarea
-                    className='block w-full rounded resize-none p-3border-blue-900 form-textarea'
+                    className='block w-full p-3 border-blue-900 rounded resize-none form-textarea'
                     placeholder='Tulis pertanyaanmu di sini'
                     autoComplete='off'
-                    {...register('question', {
-                      required: {
-                        value: true,
-                        message: 'Kamu harus mengisi pertanyaannya',
-                      },
-                      minLength: {
-                        value: MINIMUM_QUESTION_LENGTH,
-                        message: `Pertanyaanmu tidak boleh kurang dari ${MINIMUM_QUESTION_LENGTH} karakter`,
-                      },
-                      maxLength: {
-                        value: MAXIMUM_QUESTION_LENGTH,
-                        message: `Pertanyaanmu tidak boleh lebih dari ${MAXIMUM_QUESTION_LENGTH} karakter`,
-                      },
-                    })}
+                    {...register('question', questionValidator)}
                   />
                   {errors.question && (
                     <ErrorMessage message={errors.question.message} />
@@ -202,14 +206,14 @@ const Submit = () => {
                 </div>
                 <span>Kirim sebagai:</span>
                 <select
-                  defaultValue='ANONYMOUS'
+                  defaultValue={ANONYMOUS}
                   className='rounded form-select'
                   {...register('submitAs')}
                 >
-                  <option value='ANONYMOUS'>😶 Anonim</option>
-                  <option value='IDENTIFIED'>😄 Non-Anonim</option>
+                  <option value={ANONYMOUS}>😶 Anonim</option>
+                  <option value={IDENTIFIED}>😄 Non-Anonim</option>
                 </select>
-                {watch('submitAs') !== 'ANONYMOUS' && (
+                {watch('submitAs') !== ANONYMOUS && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     exit={{ opacity: 0 }}
@@ -225,7 +229,7 @@ const Submit = () => {
                         autoComplete='off'
                         {...register('name', {
                           required: {
-                            value: watch('submitAs') !== 'ANONYMOUS',
+                            value: watch('submitAs') !== ANONYMOUS,
                             message: 'Kamu harus memasukkan nama kamu',
                           },
                           maxLength: {
