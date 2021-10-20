@@ -2,7 +2,7 @@
   "name": "Ceritakan",
   "short_name": "Ceritakan",
   "theme_color": "#ffffff",
-  "background_color": "#4e7abd",
+  "background_color": "#047857",
   "display": "fullscreen",
   "orientation": "portrait",
   "scope": "/",
@@ -43,6 +43,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "splash_pages": null
+  ]
 }
