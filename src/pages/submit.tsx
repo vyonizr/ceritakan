@@ -139,153 +139,168 @@ const Submit = () => {
     return submitStatus.isComplete
   }
 
-  return (
-    <div className='relative grid items-center h-screen w-72'>
-      <Head>
-        <title>{`Buat Pertanyaan | ${SITE_TITLE}`}</title>
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-      </Head>
-      {!isSubmissionCompleted() && !isPageLoading() && (
+  const LoadingOverlay = ({ isLoading }: { isLoading: boolean }) => {
+    return (
+      <div className='absolute flex-col w-screen h-screen custom-flex-center'>
+        <div className='z-20'>
+          <SyncLoader color='#60A5FA' loading={isLoading} size={16} />
+        </div>
+        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50' />
+      </div>
+    )
+  }
+
+  const SumbissionConfirmation = () => {
+    return (
+      <div>
+        <h1 className='text-4xl text-center'>Terima kasih!</h1>
+        <h2 className='text-lg text-center'>
+          Kiriman kamu akan kami cek terlebih dahulu, ya.
+        </h2>
         <Link href='/'>
-          <img
-            className='absolute right-0 cursor-pointer top-3'
-            src='/icons/close-icon.svg'
-          ></img>
+          <button className={`${styles['submit-button']}`}>
+            Kembali ke Ceritakan
+          </button>
         </Link>
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <>
       {!isSubmissionCompleted() && isPageLoading() && (
-        <div className='self-center justify-self-center'>
-          <SyncLoader color='#60A5FA' loading={isPageLoading()} size={16} />
-        </div>
+        <LoadingOverlay isLoading={isPageLoading()} />
       )}
-      {isSubmissionCompleted() && (
-        <div>
-          <h1 className='text-4xl text-center'>Terima kasih!</h1>
-          <h2 className='text-lg text-center'>
-            Kiriman kamu akan kami cek terlebih dahulu, ya.
-          </h2>
+      <div className='relative grid items-center h-screen w-72'>
+        <Head>
+          <title>{`Buat Pertanyaan | ${SITE_TITLE}`}</title>
+          <meta name='viewport' content='width=device-width, initial-scale=1' />
+        </Head>
+        {!isSubmissionCompleted() && (
           <Link href='/'>
-            <button className={`${styles['submit-button']}`}>
-              Kembali ke Ceritakan
-            </button>
+            <img
+              className='absolute right-0 cursor-pointer top-3'
+              src='/icons/close-icon.svg'
+            ></img>
           </Link>
-        </div>
-      )}
-      {!isSubmissionCompleted() && !isPageLoading() && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          exit={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.25 }}
-          className='container flex-col self-start mt-14 custom-flex-center'
-        >
-          <h1 className='mb-5 text-3xl'>Buat Pertanyaan</h1>
-          <form
-            className='container flex-col custom-flex-center'
-            onSubmit={handleSubmit(onSubmit)}
+        )}
+        {isSubmissionCompleted() && <SumbissionConfirmation />}
+        {!isSubmissionCompleted() && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            exit={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className='container flex-col self-start mt-14 custom-flex-center'
           >
-            <select
-              defaultValue=''
-              className='mb-2 rounded form-select'
-              {...register('selectedTopicId', { required: true })}
+            <h1 className='mb-5 text-3xl'>Buat Pertanyaan</h1>
+            <form
+              className='container flex-col custom-flex-center'
+              onSubmit={handleSubmit(onSubmit)}
             >
-              <option value='' disabled>
-                Pilih Topik
-              </option>
-              {topics.data.map((topic, index) => (
-                <option
-                  key={index}
-                  value={topic.id}
-                >{`${topic.icon} ${topic.name}`}</option>
-              ))}
-            </select>
-            {watch('selectedTopicId') !== '' && (
-              <>
-                <div className='container mb-4'>
-                  <textarea
-                    className='block w-full p-3 border-blue-900 rounded resize-none form-textarea'
-                    placeholder='Tulis pertanyaanmu di sini'
-                    autoComplete='off'
-                    {...register('question', questionValidator)}
-                  />
-                  {errors.question && (
-                    <ErrorMessage message={errors.question.message} />
-                  )}
-                </div>
-                <span>Kirim sebagai:</span>
-                <select
-                  defaultValue={ANONYMOUS}
-                  className='rounded form-select'
-                  {...register('submitAs')}
-                >
-                  <option value={ANONYMOUS}>😶 Anonim</option>
-                  <option value={IDENTIFIED}>😄 Non-Anonim</option>
-                </select>
-                {watch('submitAs') !== ANONYMOUS && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    exit={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.25 }}
-                    className='container'
+              <select
+                defaultValue=''
+                className='mb-2 rounded form-select'
+                {...register('selectedTopicId', { required: true })}
+              >
+                <option value='' disabled>
+                  Pilih Topik
+                </option>
+                {topics.data.map((topic, index) => (
+                  <option
+                    key={index}
+                    value={topic.id}
+                  >{`${topic.icon} ${topic.name}`}</option>
+                ))}
+              </select>
+              {watch('selectedTopicId') !== '' && (
+                <>
+                  <div className='container mb-4'>
+                    <textarea
+                      className='block w-full p-3 border-blue-900 rounded resize-none form-textarea'
+                      placeholder='Tulis pertanyaanmu di sini'
+                      autoComplete='off'
+                      {...register('question', questionValidator)}
+                    />
+                    {errors.question && (
+                      <ErrorMessage message={errors.question.message} />
+                    )}
+                  </div>
+                  <span>Kirim sebagai:</span>
+                  <select
+                    defaultValue={ANONYMOUS}
+                    className='rounded form-select'
+                    {...register('submitAs')}
                   >
-                    <div className='my-2'>
+                    <option value={ANONYMOUS}>😶 Anonim</option>
+                    <option value={IDENTIFIED}>😄 Non-Anonim</option>
+                  </select>
+                  {watch('submitAs') !== ANONYMOUS && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      exit={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.25 }}
+                      className='container'
+                    >
+                      <div className='my-2'>
+                        <input
+                          type='text'
+                          className='container rounded form-input'
+                          placeholder='Nama kamu'
+                          autoComplete='off'
+                          {...register('name', {
+                            required: {
+                              value: watch('submitAs') !== ANONYMOUS,
+                              message: 'Kamu harus memasukkan nama kamu',
+                            },
+                            maxLength: {
+                              value: MAXIMUM_NAME_LENGTH,
+                              message: `Nama tidak bisa lebih dari ${MAXIMUM_NAME_LENGTH} karakter`,
+                            },
+                          })}
+                        />
+                        {errors.name && (
+                          <ErrorMessage message={errors.name.message} />
+                        )}
+                      </div>
                       <input
                         type='text'
                         className='container rounded form-input'
-                        placeholder='Nama kamu'
+                        placeholder='Link sosmed (opsional)'
                         autoComplete='off'
-                        {...register('name', {
-                          required: {
-                            value: watch('submitAs') !== ANONYMOUS,
-                            message: 'Kamu harus memasukkan nama kamu',
-                          },
-                          maxLength: {
-                            value: MAXIMUM_NAME_LENGTH,
-                            message: `Nama tidak bisa lebih dari ${MAXIMUM_NAME_LENGTH} karakter`,
+                        {...register('socialURL', {
+                          pattern: {
+                            value: REGEX_URL,
+                            message: `Contoh link: "https://twitter.com/twitter" (tanpa tanda kutip)`,
                           },
                         })}
                       />
-                      {errors.name && (
-                        <ErrorMessage message={errors.name.message} />
+                      {errors.socialURL && (
+                        <ErrorMessage message={errors.socialURL.message} />
                       )}
-                    </div>
-                    <input
-                      type='text'
-                      className='container rounded form-input'
-                      placeholder='Link sosmed (opsional)'
-                      autoComplete='off'
-                      {...register('socialURL', {
-                        pattern: {
-                          value: REGEX_URL,
-                          message: `Contoh link: "https://twitter.com/twitter" (tanpa tanda kutip)`,
-                        },
-                      })}
-                    />
-                    {errors.socialURL && (
-                      <ErrorMessage message={errors.socialURL.message} />
-                    )}
-                  </motion.div>
-                )}
-                <button
-                  type='submit'
-                  className={
-                    isFormValid()
-                      ? styles['submit-button']
-                      : `${styles['submit-button']} cursor-not-allowed opacity-50`
-                  }
-                >
-                  Kirim
-                </button>
-                {submitStatus.error.length > 0 && (
-                  <ErrorMessage message={submitStatus.error} />
-                )}
-              </>
-            )}
-          </form>
-        </motion.div>
-      )}
-    </div>
+                    </motion.div>
+                  )}
+                  <button
+                    type='submit'
+                    className={
+                      isFormValid()
+                        ? styles['submit-button']
+                        : `${styles['submit-button']} cursor-not-allowed opacity-50`
+                    }
+                  >
+                    Kirim
+                  </button>
+                  {submitStatus.error.length > 0 && (
+                    <ErrorMessage message={submitStatus.error} />
+                  )}
+                </>
+              )}
+            </form>
+          </motion.div>
+        )}
+      </div>
+    </>
   )
 }
 
