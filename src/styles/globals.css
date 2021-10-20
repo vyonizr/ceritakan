@@ -72,9 +72,9 @@ a {
 }
 
 .react-joyride__tooltip > div:first-child > h4 {
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .home-grid {
-  grid-template-rows: max-content max-content 1fr;
+  grid-template-rows: 1fr max-content;
 }

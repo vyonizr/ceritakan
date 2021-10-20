@@ -135,6 +135,7 @@ const Home = () => {
         data: {} as Question,
         error: ERROR_MESSAGE,
       })
+      setRun(false)
     }
   }
 
@@ -181,95 +182,92 @@ const Home = () => {
   }
 
   return (
-    <div className='container grid h-screen home-grid justify-items-center'>
+    <div className='container grid items-center h-screen grid-rows-2 home-grid justify-items-center'>
       <Head>
         <title>Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       {isRestartModalOpen && <RestartModal />}
 
-      {questionFetch.error.length === 0 ? (
-        <div
-          title='Mulai ulang tutorial'
-          className='self-end my-5 w-72'
-          onClick={() => setIsRestartModalOpen(true)}
-        >
-          <img
-            className='ml-auto mr-0 cursor-pointer'
-            src='/icons/info-icon.svg'
-            alt='Restart product tour icon'
-          ></img>
-        </div>
-      ) : (
-        <div />
-      )}
-
       {isCardEmpty() ? (
         <div className='relative'>
           <EmptyResult startOver={startOver} />
         </div>
       ) : (
-        <div className='relative self-center items card-dimension tour-open-card'>
-          <div className='absolute cursor-pointer' onClick={toggleCard}>
-            <motion.div
-              className='relative backface-invisible'
-              initial={{
-                rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
-                rotate: initialDegree,
-              }}
-              animate={{
-                rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
-                rotate: rotateDegree,
-              }}
-              transition={{ duration: CARD_FLIP_DURATION }}
-            >
-              <div className='absolute flex items-end justify-center w-full h-full pb-9'>
-                {isCardReady() ? (
-                  <button aria-label={'Open card'} className='sonar'></button>
-                ) : (
-                  <MoonLoader
-                    color='#fff'
-                    loading={questionFetch.isLoading}
-                    size={40}
-                  />
-                )}
-              </div>
-              <BackCard />
-            </motion.div>
+        <div>
+          <div
+            title='Mulai ulang tutorial'
+            className='self-end mb-5 w-72'
+            onClick={() => setIsRestartModalOpen(true)}
+          >
+            <img
+              className='ml-auto mr-0 cursor-pointer'
+              src='/icons/info-icon.svg'
+              alt='Restart product tour icon'
+            ></img>
           </div>
-          <div className='absolute cursor-pointer' onClick={getNewCard}>
-            <motion.div
-              className='relative cursor-pointer backface-invisible'
-              initial={{
-                rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
-                rotate: initialDegree,
-              }}
-              animate={{
-                rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
-                rotate: rotateDegree,
-              }}
-              transition={{ duration: CARD_FLIP_DURATION }}
-            >
-              <QuestionCard question={questionFetch.data} />
-            </motion.div>
+          <div className='relative self-center items card-dimension tour-open-card'>
+            <div className='absolute cursor-pointer' onClick={toggleCard}>
+              <motion.div
+                className='relative backface-invisible'
+                initial={{
+                  rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
+                  rotate: initialDegree,
+                }}
+                animate={{
+                  rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
+                  rotate: rotateDegree,
+                }}
+                transition={{ duration: CARD_FLIP_DURATION }}
+              >
+                <div className='absolute flex items-end justify-center w-full h-full pb-9'>
+                  {isCardReady() ? (
+                    <button aria-label={'Open card'} className='sonar'></button>
+                  ) : (
+                    <MoonLoader
+                      color='#fff'
+                      loading={questionFetch.isLoading}
+                      size={40}
+                    />
+                  )}
+                </div>
+                <BackCard />
+              </motion.div>
+            </div>
+            <div className='absolute cursor-pointer' onClick={getNewCard}>
+              <motion.div
+                className='relative cursor-pointer backface-invisible'
+                initial={{
+                  rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
+                  rotate: initialDegree,
+                }}
+                animate={{
+                  rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
+                  rotate: rotateDegree,
+                }}
+                transition={{ duration: CARD_FLIP_DURATION }}
+              >
+                <QuestionCard question={questionFetch.data} />
+              </motion.div>
+            </div>
           </div>
+          <motion.p
+            className='self-end mt-12 text-center'
+            initial={{ opacity: isOpen ? 1 : 0 }}
+            exit={{ opacity: isOpen ? 0 : 1 }}
+            animate={{ opacity: isOpen ? 0 : 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link href='/submit'>
+              <a className='text-lg font-bold no-underline text-primary'>
+                Kirim pertanyaan
+              </a>
+            </Link>
+          </motion.p>
         </div>
       )}
 
-      <div className='grid h-full grid-rows-2'>
-        <motion.p
-          className='self-end text-center'
-          initial={{ opacity: isOpen ? 1 : 0 }}
-          exit={{ opacity: isOpen ? 0 : 1 }}
-          animate={{ opacity: isOpen ? 0 : 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Link href='/submit'>
-            <a className='text-lg font-bold no-underline text-primary'>
-              Kirim pertanyaan
-            </a>
-          </Link>
-        </motion.p>
+      <div className='grid h-full'>
         <div className='self-end mb-6'>
           <Footer />
         </div>
