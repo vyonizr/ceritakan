@@ -153,7 +153,7 @@ const Submit = () => {
           </h2>
           <Link href='/'>
             <button className={`${styles['submit-button']}`}>
-              Kembali ke halaman utama
+              Kembali ke Ceritakan
             </button>
           </Link>
         </>
