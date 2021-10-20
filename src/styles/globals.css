@@ -70,3 +70,7 @@ a {
 .react-joyride__tooltip > div:first-child > h4 {
   font-weight: 500;
 }
+
+.home-grid {
+  grid-template-rows: 1fr max-content 1fr;
+}

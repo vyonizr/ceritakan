@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import Router from 'next/router'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
 import { ACTIONS, LIFECYCLE } from 'react-joyride'
@@ -17,8 +17,8 @@ import {
   ERROR_MESSAGE,
 } from 'src/common/constants'
 import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
+import { ProductTourTooltip } from 'src/components'
 
-const Joyride = dynamic(() => import('react-joyride'), { ssr: false })
 const initialDegree = getRandomFloat(
   CARD_MIN_ROTATE_DEGREE,
   CARD_MAX_ROTATE_DEGREE
@@ -36,6 +36,7 @@ const Home = () => {
   const [rotateDegree, setRotateDegree] = useState(
     getRandomIntInclusive(CARD_MIN_ROTATE_DEGREE, CARD_MAX_ROTATE_DEGREE)
   )
+  const [isRestartModalOpen, setIsRestartModalOpen] = useState(false)
 
   useEffect(() => {
     setRun(isProductTourNotCompleted())
@@ -112,7 +113,7 @@ const Home = () => {
   }
 
   const startOver = () => {
-    localStorage.setItem('r_ids', '')
+    localStorage.removeItem('r_ids')
     handleQuestionFetch()
   }
 
@@ -147,18 +148,62 @@ const Home = () => {
     )
   }
 
+  const restartProductTour = () => {
+    localStorage.removeItem('pt')
+    Router.reload()
+  }
+
+  const RestartModal = () => {
+    return (
+      <div className='absolute flex-col w-screen h-screen custom-flex-center'>
+        <div className='z-20 flex-col w-64 p-3 rounded-md custom-flex-center bg-gray-50'>
+          <h2 className='mb-4 text-lg text-center'>
+            Apakah kamu ingin mengulangi tutorial?
+          </h2>
+          <div className='grid grid-cols-2 w-max gap-x-5'>
+            <button
+              className='p-3 font-medium rounded-lg'
+              onClick={() => setIsRestartModalOpen(false)}
+            >
+              <span>Tidak</span>
+            </button>
+            <button
+              className='p-3 font-medium text-white bg-blue-500 rounded-lg'
+              onClick={restartProductTour}
+            >
+              <span className='text-white'>Ulangi</span>
+            </button>
+          </div>
+        </div>
+        <div className='absolute z-10 w-screen h-screen bg-gray-900 opacity-80' />
+      </div>
+    )
+  }
+
   return (
-    <div className='container grid items-end h-screen grid-rows-3 justify-items-center'>
+    <div className='container grid h-screen gap-y-5 home-grid justify-items-center'>
       <Head>
         <title>Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
+      {isRestartModalOpen && <RestartModal />}
+      <div
+        title='Mulai ulang tutorial'
+        className='self-end w-72'
+        onClick={() => setIsRestartModalOpen(true)}
+      >
+        <img
+          className='ml-auto mr-0 cursor-pointer'
+          src='/icons/info-icon.svg'
+          alt='Restart product tour icon'
+        ></img>
+      </div>
       {isCardEmpty() ? (
-        <div className='relative row-span-2'>
+        <div className='relative'>
           <EmptyResult startOver={startOver} />
         </div>
       ) : (
-        <div className='relative row-span-2 card-dimension tour-open-card'>
+        <div className='relative self-center items card-dimension tour-open-card'>
           <div className='absolute cursor-pointer' onClick={toggleCard}>
             <motion.div
               className='relative backface-invisible'
@@ -204,9 +249,9 @@ const Home = () => {
           </div>
         </div>
       )}
-      <div className={'grid h-full grid-rows-2'}>
+      <div className='grid h-full grid-rows-2'>
         <motion.p
-          className='mt-10 text-center'
+          className='text-center'
           initial={{ opacity: isOpen ? 1 : 0 }}
           exit={{ opacity: isOpen ? 0 : 1 }}
           animate={{ opacity: isOpen ? 0 : 1 }}
@@ -220,20 +265,11 @@ const Home = () => {
           <Footer />
         </div>
       </div>
-      <Joyride
+      <ProductTourTooltip
         callback={handleJoyrideCallback}
         steps={TOUR_STEPS}
         run={run}
         stepIndex={stepIndex}
-        styles={{
-          options: { primaryColor: '#3B82F6' },
-          buttonNext: {
-            display: 'none',
-          },
-        }}
-        disableOverlay
-        hideBackButton
-        disableCloseOnEsc
       />
     </div>
   )

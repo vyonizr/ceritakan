@@ -181,6 +181,7 @@ const Submit = () => {
             <img
               className='absolute right-0 cursor-pointer top-3'
               src='/icons/close-icon.svg'
+              alt='Close icon'
             ></img>
           </Link>
         )}
