@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
 import { ACTIONS, LIFECYCLE } from 'react-joyride'
@@ -203,7 +204,22 @@ const Home = () => {
           </div>
         </div>
       )}
-      <Footer />
+      <div className={'grid h-full grid-rows-2'}>
+        <Link href='/submit'>
+          <motion.a
+            className='mt-10 text-center'
+            initial={{ opacity: isOpen ? 1 : 0 }}
+            exit={{ opacity: isOpen ? 0 : 1 }}
+            animate={{ opacity: isOpen ? 0 : 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            Ingin pertanyaan kamu muncul di sini?
+          </motion.a>
+        </Link>
+        <div className='self-end mb-6'>
+          <Footer />
+        </div>
+      </div>
       <Joyride
         callback={handleJoyrideCallback}
         steps={TOUR_STEPS}
