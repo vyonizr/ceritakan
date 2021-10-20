@@ -19,7 +19,7 @@
 
   @font-face {
     font-family: Louis George Cafe;
-    font-weight: 500;
+    font-weight: 700;
     src: url(/fonts/louis-george-cafe/700-bold.ttf) format('truetype');
     font-display: swap;
   }
@@ -30,4 +30,12 @@
     src: url(/fonts/roustel/400-regular.ttf) format('truetype');
     font-display: swap;
   }
+}
+
+:focus {
+  @apply focus:ring-primary focus:border-primary;
+}
+
+option:focus-within {
+  @apply bg-primary;
 }
