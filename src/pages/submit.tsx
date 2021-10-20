@@ -140,27 +140,35 @@ const Submit = () => {
   }
 
   return (
-    <div className='grid items-center h-screen w-72'>
+    <div className='relative grid items-center h-screen w-72'>
       <Head>
         <title>{`Buat Pertanyaan | ${SITE_TITLE}`}</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
+      {!isSubmissionCompleted() && !isPageLoading() && (
+        <Link href='/'>
+          <img
+            className='absolute right-0 cursor-pointer top-3'
+            src='/icons/close-icon.svg'
+          ></img>
+        </Link>
+      )}
+      {!isSubmissionCompleted() && isPageLoading() && (
+        <div className='self-center justify-self-center'>
+          <SyncLoader color='#60A5FA' loading={isPageLoading()} size={16} />
+        </div>
+      )}
       {isSubmissionCompleted() && (
-        <>
+        <div>
           <h1 className='text-4xl text-center'>Terima kasih!</h1>
           <h2 className='text-lg text-center'>
-            Kiriman kamu akan kami cek terlebih dahulu.
+            Kiriman kamu akan kami cek terlebih dahulu, ya.
           </h2>
           <Link href='/'>
             <button className={`${styles['submit-button']}`}>
               Kembali ke Ceritakan
             </button>
           </Link>
-        </>
-      )}
-      {!isSubmissionCompleted() && isPageLoading() && (
-        <div className='self-center justify-self-center'>
-          <SyncLoader color='#60A5FA' loading={isPageLoading()} size={16} />
         </div>
       )}
       {!isSubmissionCompleted() && !isPageLoading() && (
@@ -169,7 +177,7 @@ const Submit = () => {
           exit={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25 }}
-          className='container flex-col self-start mt-12 custom-flex-center'
+          className='container flex-col self-start mt-14 custom-flex-center'
         >
           <h1 className='mb-5 text-3xl'>Buat Pertanyaan</h1>
           <form
