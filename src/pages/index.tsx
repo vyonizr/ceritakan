@@ -168,7 +168,7 @@ const Home = () => {
               <span>Tidak</span>
             </button>
             <button
-              className='p-3 font-medium text-white bg-blue-500 rounded-lg'
+              className='p-3 font-medium text-white rounded-lg bg-primary'
               onClick={restartProductTour}
             >
               <span className='text-white'>Ulangi</span>
@@ -181,23 +181,29 @@ const Home = () => {
   }
 
   return (
-    <div className='container grid h-screen gap-y-5 home-grid justify-items-center'>
+    <div className='container grid h-screen home-grid justify-items-center'>
       <Head>
         <title>Ceritakan</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       {isRestartModalOpen && <RestartModal />}
-      <div
-        title='Mulai ulang tutorial'
-        className='self-end w-72'
-        onClick={() => setIsRestartModalOpen(true)}
-      >
-        <img
-          className='ml-auto mr-0 cursor-pointer'
-          src='/icons/info-icon.svg'
-          alt='Restart product tour icon'
-        ></img>
-      </div>
+
+      {questionFetch.error.length === 0 ? (
+        <div
+          title='Mulai ulang tutorial'
+          className='self-end my-5 w-72'
+          onClick={() => setIsRestartModalOpen(true)}
+        >
+          <img
+            className='ml-auto mr-0 cursor-pointer'
+            src='/icons/info-icon.svg'
+            alt='Restart product tour icon'
+          ></img>
+        </div>
+      ) : (
+        <div />
+      )}
+
       {isCardEmpty() ? (
         <div className='relative'>
           <EmptyResult startOver={startOver} />
@@ -249,16 +255,19 @@ const Home = () => {
           </div>
         </div>
       )}
+
       <div className='grid h-full grid-rows-2'>
         <motion.p
-          className='text-center'
+          className='self-end text-center'
           initial={{ opacity: isOpen ? 1 : 0 }}
           exit={{ opacity: isOpen ? 0 : 1 }}
           animate={{ opacity: isOpen ? 0 : 1 }}
           transition={{ duration: 0.5 }}
         >
           <Link href='/submit'>
-            <a>Ingin pertanyaan kamu muncul di sini?</a>
+            <a className='text-lg font-bold no-underline text-primary'>
+              Kirim pertanyaan
+            </a>
           </Link>
         </motion.p>
         <div className='self-end mb-6'>

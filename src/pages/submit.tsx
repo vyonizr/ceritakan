@@ -143,7 +143,7 @@ const Submit = () => {
     return (
       <div className='absolute flex-col w-screen h-screen custom-flex-center'>
         <div className='z-20'>
-          <SyncLoader color='#60A5FA' loading={isLoading} size={16} />
+          <SyncLoader color='#047857' loading={isLoading} size={16} />
         </div>
         <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50' />
       </div>
@@ -173,7 +173,7 @@ const Submit = () => {
       )}
       <div className='relative grid items-center h-screen w-72'>
         <Head>
-          <title>{`Buat Pertanyaan | ${SITE_TITLE}`}</title>
+          <title>{`Kirim Pertanyaan | ${SITE_TITLE}`}</title>
           <meta name='viewport' content='width=device-width, initial-scale=1' />
         </Head>
         {!isSubmissionCompleted() && (
@@ -194,7 +194,7 @@ const Submit = () => {
             transition={{ duration: 0.25 }}
             className='container flex-col self-start mt-14 custom-flex-center'
           >
-            <h1 className='mb-5 text-3xl'>Buat Pertanyaan</h1>
+            <h1 className='mb-5 text-3xl'>Kirim Pertanyaan</h1>
             <form
               className='container flex-col custom-flex-center'
               onSubmit={handleSubmit(onSubmit)}
@@ -218,7 +218,7 @@ const Submit = () => {
                 <>
                   <div className='container mb-4'>
                     <textarea
-                      className='block w-full p-3 border-blue-900 rounded resize-none form-textarea'
+                      className='block w-full p-3 rounded resize-none border-primary form-textarea'
                       placeholder='Tulis pertanyaanmu di sini'
                       autoComplete='off'
                       {...register('question', questionValidator)}
