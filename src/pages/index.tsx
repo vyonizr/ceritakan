@@ -17,6 +17,7 @@ import {
   ERROR_MESSAGE,
 } from 'src/common/constants'
 import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
+import { REGEX_COMMA_SEPARATED_NUMBER } from 'src/helpers/regex'
 import { ProductTourTooltip } from 'src/components'
 
 const initialDegree = getRandomFloat(
@@ -39,6 +40,14 @@ const Home = () => {
   const [isRestartModalOpen, setIsRestartModalOpen] = useState(false)
 
   useEffect(() => {
+    const readQuestionIds: string | null = localStorage.getItem('r_ids')
+    const isReadIdsNotValid =
+      readQuestionIds && !REGEX_COMMA_SEPARATED_NUMBER.test(readQuestionIds)
+
+    if (isReadIdsNotValid) {
+      localStorage.removeItem('r_ids')
+    }
+
     setRun(isProductTourNotCompleted())
     handleQuestionFetch()
   }, [])
