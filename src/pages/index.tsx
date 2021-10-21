@@ -100,15 +100,17 @@ const Home = () => {
     }, 1000)
   }
 
-  const getNewCard = () => {
-    if (stepIndex === 1 && isProductTourNotCompleted()) {
-      // Product tour is done
-      localStorage.setItem('pt', '1')
-    }
+  const getNewCard = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.tagName !== 'A') {
+      if (stepIndex === 1 && isProductTourNotCompleted()) {
+        // Product tour is done
+        localStorage.setItem('pt', '1')
+      }
 
-    toggleCard()
-    if (isOpen) {
-      handleQuestionFetch()
+      toggleCard()
+      if (isOpen) {
+        handleQuestionFetch()
+      }
     }
   }
 
@@ -234,7 +236,10 @@ const Home = () => {
                 <BackCard />
               </motion.div>
             </div>
-            <div className='absolute cursor-pointer' onClick={getNewCard}>
+            <div
+              className='absolute cursor-pointer'
+              onClick={(event: any) => getNewCard(event)}
+            >
               <motion.div
                 className='relative cursor-pointer backface-invisible'
                 initial={{

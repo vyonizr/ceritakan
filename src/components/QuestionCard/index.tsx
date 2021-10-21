@@ -1,6 +1,34 @@
 import React from 'react'
-import { CardProps } from 'src/common/types'
+import Link from 'next/link'
+
+import { CardProps, Submission } from 'src/common/types'
 import BaseCard from 'src/components/BaseCard'
+
+interface SubmitterProps {
+  submission: Submission
+}
+
+const Submitter = ({ submission }: SubmitterProps) => {
+  if (submission.sender_social_url.length > 0) {
+    return (
+      <Link href={submission.sender_social_url} passHref>
+        <a
+          target='_blank'
+          rel='noreferrer noopener'
+          className='absolute bottom-0 p-3 mx-auto text-sm italic text-center select-none text-primary'
+        >
+          {submission.sender_name}
+        </a>
+      </Link>
+    )
+  }
+
+  return (
+    <small className='absolute bottom-0 p-3 mx-auto italic text-center select-none'>
+      {submission.sender_name}
+    </small>
+  )
+}
 
 const Card: React.FC<CardProps> = ({ question }: CardProps) => (
   <BaseCard>
@@ -16,6 +44,7 @@ const Card: React.FC<CardProps> = ({ question }: CardProps) => (
           {question.question}
         </p>
       </div>
+      {question.submission && <Submitter submission={question.submission} />}
     </div>
   </BaseCard>
 )
