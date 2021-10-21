@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
-import dynamic from 'next/dynamic'
+import Link from 'next/link'
+import Router from 'next/router'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
 import { ACTIONS, LIFECYCLE } from 'react-joyride'
@@ -16,8 +17,8 @@ import {
   ERROR_MESSAGE,
 } from 'src/common/constants'
 import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
+import { ProductTourTooltip } from 'src/components'
 
-const Joyride = dynamic(() => import('react-joyride'), { ssr: false })
 const initialDegree = getRandomFloat(
   CARD_MIN_ROTATE_DEGREE,
   CARD_MAX_ROTATE_DEGREE
@@ -35,6 +36,7 @@ const Home = () => {
   const [rotateDegree, setRotateDegree] = useState(
     getRandomIntInclusive(CARD_MIN_ROTATE_DEGREE, CARD_MAX_ROTATE_DEGREE)
   )
+  const [isRestartModalOpen, setIsRestartModalOpen] = useState(false)
 
   useEffect(() => {
     setRun(isProductTourNotCompleted())
@@ -98,20 +100,22 @@ const Home = () => {
     }, 1000)
   }
 
-  const getNewCard = () => {
-    if (stepIndex === 1 && isProductTourNotCompleted()) {
-      // Product tour is done
-      localStorage.setItem('pt', '1')
-    }
+  const getNewCard = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.tagName !== 'A') {
+      if (stepIndex === 1 && isProductTourNotCompleted()) {
+        // Product tour is done
+        localStorage.setItem('pt', '1')
+      }
 
-    toggleCard()
-    if (isOpen) {
-      handleQuestionFetch()
+      toggleCard()
+      if (isOpen) {
+        handleQuestionFetch()
+      }
     }
   }
 
   const startOver = () => {
-    localStorage.setItem('r_ids', '')
+    localStorage.removeItem('r_ids')
     handleQuestionFetch()
   }
 
@@ -133,6 +137,7 @@ const Home = () => {
         data: {} as Question,
         error: ERROR_MESSAGE,
       })
+      setRun(false)
     }
   }
 
@@ -146,77 +151,137 @@ const Home = () => {
     )
   }
 
+  const restartProductTour = () => {
+    localStorage.removeItem('pt')
+    Router.reload()
+  }
+
+  const RestartModal = () => {
+    return (
+      <div className='absolute flex-col w-screen h-screen custom-flex-center'>
+        <div className='z-20 flex-col w-64 p-3 rounded-md custom-flex-center bg-gray-50'>
+          <h2 className='mb-4 text-lg text-center'>
+            Apakah kamu ingin mengulangi tutorial?
+          </h2>
+          <div className='grid grid-cols-2 w-max gap-x-5'>
+            <button
+              className='p-3 font-medium rounded-lg'
+              onClick={() => setIsRestartModalOpen(false)}
+            >
+              <span>Tidak</span>
+            </button>
+            <button
+              className='p-3 font-medium text-white rounded-lg bg-primary'
+              onClick={restartProductTour}
+            >
+              <span className='text-white'>Ulangi</span>
+            </button>
+          </div>
+        </div>
+        <div className='absolute z-10 w-screen h-screen bg-gray-900 opacity-80' />
+      </div>
+    )
+  }
+
   return (
-    <div className='container grid items-end h-screen grid-rows-3 justify-items-center'>
+    <div className='container grid items-center h-screen grid-rows-2 home-grid justify-items-center'>
       <Head>
         <title>Ceritakan</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
+      {isRestartModalOpen && <RestartModal />}
+
       {isCardEmpty() ? (
-        <div className='relative row-span-2'>
+        <div className='relative'>
           <EmptyResult startOver={startOver} />
         </div>
       ) : (
-        <div className='relative row-span-2 card-dimension tour-open-card'>
-          <div className='absolute cursor-pointer' onClick={toggleCard}>
-            <motion.div
-              className='relative backface-invisible'
-              initial={{
-                rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
-                rotate: initialDegree,
-              }}
-              animate={{
-                rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
-                rotate: rotateDegree,
-              }}
-              transition={{ duration: CARD_FLIP_DURATION }}
-            >
-              <div className='absolute flex items-end justify-center w-full h-full pb-9'>
-                {isCardReady() ? (
-                  <button aria-label={'Open card'} className='sonar'></button>
-                ) : (
-                  <MoonLoader
-                    color='#fff'
-                    loading={questionFetch.isLoading}
-                    size={40}
-                  />
-                )}
-              </div>
-              <BackCard />
-            </motion.div>
+        <div>
+          <div
+            title='Mulai ulang tutorial'
+            className='self-end mb-5 w-72'
+            onClick={() => setIsRestartModalOpen(true)}
+          >
+            <img
+              className='ml-auto mr-0 cursor-pointer'
+              src='/icons/info-icon.svg'
+              alt='Restart product tour icon'
+            ></img>
           </div>
-          <div className='absolute cursor-pointer' onClick={getNewCard}>
-            <motion.div
-              className='relative cursor-pointer backface-invisible'
-              initial={{
-                rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
-                rotate: initialDegree,
-              }}
-              animate={{
-                rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
-                rotate: rotateDegree,
-              }}
-              transition={{ duration: CARD_FLIP_DURATION }}
+          <div className='relative self-center items card-dimension tour-open-card'>
+            <div className='absolute cursor-pointer' onClick={toggleCard}>
+              <motion.div
+                className='relative backface-invisible'
+                initial={{
+                  rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
+                  rotate: initialDegree,
+                }}
+                animate={{
+                  rotateY: isOpen ? CARD_FLIP_DEGREE : 0,
+                  rotate: rotateDegree,
+                }}
+                transition={{ duration: CARD_FLIP_DURATION }}
+              >
+                <div className='absolute flex items-end justify-center w-full h-full pb-9'>
+                  {isCardReady() ? (
+                    <button aria-label={'Open card'} className='sonar'></button>
+                  ) : (
+                    <MoonLoader
+                      color='#fff'
+                      loading={questionFetch.isLoading}
+                      size={40}
+                    />
+                  )}
+                </div>
+                <BackCard />
+              </motion.div>
+            </div>
+            <div
+              className='absolute cursor-pointer'
+              onClick={(event: any) => getNewCard(event)}
             >
-              <QuestionCard question={questionFetch.data} />
-            </motion.div>
+              <motion.div
+                className='relative cursor-pointer backface-invisible'
+                initial={{
+                  rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
+                  rotate: initialDegree,
+                }}
+                animate={{
+                  rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
+                  rotate: rotateDegree,
+                }}
+                transition={{ duration: CARD_FLIP_DURATION }}
+              >
+                <QuestionCard question={questionFetch.data} />
+              </motion.div>
+            </div>
           </div>
+          <motion.p
+            className='self-end mt-12 text-center'
+            initial={{ opacity: isOpen ? 1 : 0 }}
+            exit={{ opacity: isOpen ? 0 : 1 }}
+            animate={{ opacity: isOpen ? 0 : 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link href='/submit'>
+              <a className='text-lg font-bold no-underline text-primary'>
+                Kirim pertanyaan
+              </a>
+            </Link>
+          </motion.p>
         </div>
       )}
-      <Footer />
-      <Joyride
+
+      <div className='grid h-full'>
+        <div className='self-end mb-6'>
+          <Footer />
+        </div>
+      </div>
+      <ProductTourTooltip
         callback={handleJoyrideCallback}
         steps={TOUR_STEPS}
         run={run}
         stepIndex={stepIndex}
-        styles={{
-          options: { primaryColor: '#3B82F6' },
-          buttonNext: {
-            display: 'none',
-          },
-        }}
-        disableOverlay
-        hideBackButton
-        disableCloseOnEsc
       />
     </div>
   )

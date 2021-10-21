@@ -24,7 +24,6 @@ class MyDocument extends Document {
       <Html lang='id'>
         <Head>
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-          <meta name='viewport' content='width=device-width, initial-scale=1' />
           <meta name='description' content={SITE_DESCRIPTION} />
           <meta name='keywords' content='card game' />
           <link rel='manifest' href='/manifest.json' />
@@ -42,7 +41,7 @@ class MyDocument extends Document {
           />
           <link rel='apple-touch-icon' href='/apple-icon.png'></link>
           <link rel='icon' href='/favicon.ico' />
-          <meta name='theme-color' content='#4e7abd' />
+          <meta name='theme-color' content='#047857' />
 
           <meta property='og:type' content='website' />
           <meta property='og:url' content={SITE_URL} />

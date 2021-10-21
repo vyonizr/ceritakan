@@ -8,19 +8,41 @@ generator client {
 }
 
 model Topic {
-  id         Int        @id @default(autoincrement())
-  name       String     @unique
-  icon       String     @default("🌐")
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  icon       String       @default("🌐")
   questions  Question[]
-  created_at DateTime   @default(now())
-  updated_at DateTime   @default(now()) @updatedAt
+  created_at DateTime     @default(now())
+  updated_at DateTime     @default(now()) @updatedAt
+  Submission Submission[]
 }
 
 model Question {
-  id         Int      @id @default(autoincrement())
-  question   String
-  topic_id   Int
-  topic      Topic    @relation(fields: [topic_id], references: [id])
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  id            Int         @id @default(autoincrement())
+  question      String
+  topic_id      Int
+  topic         Topic       @relation(fields: [topic_id], references: [id])
+  submission_id Int?        @unique
+  submission    Submission? @relation(fields: [submission_id], references: [id])
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @default(now()) @updatedAt
+}
+
+model Submission {
+  id                Int        @id @default(autoincrement())
+  content           String
+  topic_id          Int
+  topic             Topic      @relation(fields: [topic_id], references: [id])
+  sender_name       String?
+  sender_social_url String?
+  sender_type       SenderType @default(ANONYMOUS)
+  question_id       Int?
+  question          Question?
+  created_at        DateTime   @default(now())
+  updated_at        DateTime   @default(now()) @updatedAt
+}
+
+enum SenderType {
+  ANONYMOUS
+  IDENTIFIED
 }

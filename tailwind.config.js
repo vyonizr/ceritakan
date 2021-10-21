@@ -13,6 +13,9 @@ module.exports = {
       gray: colors.coolGray,
       blue: colors.blue,
       white: colors.white,
+      emerald: colors.emerald,
+      primary: colors.emerald[700],
+      black: colors.gray[700]
     },
     fontFamily: {
       sans: ['Louis George Cafe', 'sans-serif'],
@@ -30,5 +33,10 @@ module.exports = {
         '4xl': '2rem',
       }
     }
-  }
+  },
+  plugins: [
+    require("@tailwindcss/forms")({
+      strategy: 'class',
+    }),
+  ],
 }

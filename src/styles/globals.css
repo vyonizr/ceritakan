@@ -9,6 +9,10 @@
   justify-content: center;
 }
 
+body {
+  @apply text-gray-700;
+}
+
 .custom-flex-center {
   @apply flex items-center justify-center;
 }
@@ -68,5 +72,9 @@ a {
 }
 
 .react-joyride__tooltip > div:first-child > h4 {
-  font-weight: 500;
+  font-weight: 700;
+}
+
+.home-grid {
+  grid-template-rows: 1fr max-content;
 }

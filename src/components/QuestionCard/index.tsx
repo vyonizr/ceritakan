@@ -1,16 +1,50 @@
 import React from 'react'
-import { CardProps } from 'src/common/types'
+import Link from 'next/link'
+
+import { CardProps, Submission } from 'src/common/types'
 import BaseCard from 'src/components/BaseCard'
+
+interface SubmitterProps {
+  submission: Submission
+}
+
+const Submitter = ({ submission }: SubmitterProps) => {
+  if (submission.sender_social_url.length > 0) {
+    return (
+      <Link href={submission.sender_social_url} passHref>
+        <a
+          target='_blank'
+          rel='noreferrer noopener'
+          className='absolute bottom-0 p-3 mx-auto text-sm italic text-center select-none text-primary'
+        >
+          {submission.sender_name}
+        </a>
+      </Link>
+    )
+  }
+
+  return (
+    <small className='absolute bottom-0 p-3 mx-auto italic text-center select-none'>
+      {submission.sender_name}
+    </small>
+  )
+}
 
 const Card: React.FC<CardProps> = ({ question }: CardProps) => (
   <BaseCard>
-    <div className='custom-flex-center relative rounded-2xl border-2 border-blue-900 w-full h-full p-4'>
-      <p className='absolute top-4 right-0 w-full text-center text-3xl text-gray-700 font-roustel'>
+    <div className='relative w-full h-full p-4 border-2 border-primary custom-flex-center rounded-2xl'>
+      <p className='absolute right-0 w-full text-3xl text-center select-none top-4 font-roustel'>
         Ceritakan
       </p>
-      <p className='text-gray-700 text-center subpixel-antialiased'>
-        {question.question}
-      </p>
+      <div className='relative'>
+        <p className='container absolute right-0 text-center select-none -top-7'>
+          {question.topic?.icon}
+        </p>
+        <p className='subpixel-antialiased text-center select-none'>
+          {question.question}
+        </p>
+      </div>
+      {question.submission && <Submitter submission={question.submission} />}
     </div>
   </BaseCard>
 )
