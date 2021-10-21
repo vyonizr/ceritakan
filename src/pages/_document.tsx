@@ -41,7 +41,7 @@ class MyDocument extends Document {
           />
           <link rel='apple-touch-icon' href='/apple-icon.png'></link>
           <link rel='icon' href='/favicon.ico' />
-          <meta name='theme-color' content='#4e7abd' />
+          <meta name='theme-color' content='#047857' />
 
           <meta property='og:type' content='website' />
           <meta property='og:url' content={SITE_URL} />

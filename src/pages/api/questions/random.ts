@@ -49,6 +49,13 @@ export default async function handler(
           id: true,
           question: true,
           topic: true,
+          submission: {
+            select: {
+              sender_name: true,
+              sender_social_url: true,
+              sender_type: true,
+            },
+          },
         },
         where: {
           id: randomId,
