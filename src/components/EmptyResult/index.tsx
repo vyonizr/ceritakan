@@ -5,9 +5,9 @@ interface BackCardProps {
 }
 
 const BackCard: React.FC<BackCardProps> = ({ startOver }) => (
-  <div className='custom-flex-center flex-col'>
+  <div className='flex-col custom-flex-center'>
     <p className='my-3'>{'Maaf, kartunya sudah habis ☹️'}</p>
-    <button className='p-3 text-white bg-primary rounded-lg font-medium'>
+    <button className='p-3 font-medium text-white rounded-lg bg-primary'>
       <span className='text-white' onClick={startOver}>
         Mulai lagi
       </span>

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from 'src/config'
 import { setErrorResponse } from 'src/helpers'
-import { Question } from 'src/common/types'
+import { ANONYMOUS, IDENTIFIED } from 'src/common/constants'
 import type { SenderType } from '@prisma/client'
 
 import {
@@ -40,11 +40,11 @@ const validateSubmission = (body: RequestBody) => {
     return setErrorResponse(`Question is too long`, 422)
   }
 
-  if (submit_as !== 'ANONYMOUS' && submit_as !== 'IDENTIFIED') {
+  if (submit_as !== ANONYMOUS && submit_as !== IDENTIFIED) {
     return setErrorResponse(`Parameter 'submit_as' is invalid.`, 422)
   }
 
-  if (submit_as === 'IDENTIFIED') {
+  if (submit_as === IDENTIFIED) {
     if (name.length < 1) {
       return setErrorResponse(`Parameter 'name' required`, 422)
     }
@@ -82,8 +82,8 @@ export default async function handler(
             topic_id: Number(topic_id),
             content: question,
             sender_type: submit_as as SenderType,
-            sender_name: submit_as === 'IDENTIFIED' ? name : null,
-            sender_social_url: submit_as === 'IDENTIFIED' ? social_url : null,
+            sender_name: submit_as === IDENTIFIED ? name : null,
+            sender_social_url: submit_as === IDENTIFIED ? social_url : null,
           },
         })
 
