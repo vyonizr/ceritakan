@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 
 import { CardProps, Submission } from 'src/common/types'
+import { ANONYMOUS } from 'src/common/constants'
 import BaseCard from 'src/components/BaseCard'
 
 interface SubmitterProps {
@@ -9,7 +10,10 @@ interface SubmitterProps {
 }
 
 const Submitter = ({ submission }: SubmitterProps) => {
-  if (submission.sender_social_url.length > 0) {
+  if (
+    submission.sender_type !== ANONYMOUS &&
+    submission.sender_social_url.length > 0
+  ) {
     return (
       <Link href={submission.sender_social_url} passHref>
         <a
@@ -25,7 +29,7 @@ const Submitter = ({ submission }: SubmitterProps) => {
 
   return (
     <small className='absolute bottom-0 p-3 mx-auto italic text-center select-none'>
-      {submission.sender_name}
+      {submission.sender_type === ANONYMOUS ? 'Anonim' : submission.sender_name}
     </small>
   )
 }
