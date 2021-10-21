@@ -206,15 +206,13 @@ const Home = () => {
         </div>
       ) : (
         <div>
-          <div
-            title='Mulai ulang tutorial'
-            className='self-end mb-5 w-72'
-            onClick={() => setIsRestartModalOpen(true)}
-          >
+          <div className='self-end mb-5 w-72'>
             <img
+              title='Mulai ulang tutorial'
               className='ml-auto mr-0 cursor-pointer'
               src='/icons/info-icon.svg'
               alt='Restart product tour icon'
+              onClick={() => setIsRestartModalOpen(true)}
             ></img>
           </div>
           <div className='relative self-center items card-dimension tour-open-card'>
