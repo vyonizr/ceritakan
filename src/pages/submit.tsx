@@ -52,6 +52,7 @@ const Submit = () => {
     isLoading: false,
     error: '',
   })
+  const [isModalCancelOpen, setIsModalCancelOpen] = useState(false)
 
   const {
     register,
@@ -128,7 +129,10 @@ const Submit = () => {
   }
 
   const isFormValid = () => {
-    return Object.keys(errors).length === 0
+    return (
+      Object.keys(errors).length === 0 ||
+      (watch('submitAs') === ANONYMOUS && (errors.name || errors.socialURL))
+    )
   }
 
   const isPageLoading = () => {
@@ -145,7 +149,7 @@ const Submit = () => {
         <div className='z-20'>
           <SyncLoader color='#047857' loading={isLoading} size={16} />
         </div>
-        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50' />
+        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50 dark:bg-gray-900' />
       </div>
     )
   }
@@ -166,24 +170,62 @@ const Submit = () => {
     )
   }
 
+  const CancelSubmit = () => {
+    return (
+      <div className='absolute flex-col w-screen h-screen custom-flex-center dark:text-black'>
+        <div className='z-20 flex-col p-3 rounded-md w-72 custom-flex-center bg-gray-50'>
+          <h2 className='mb-4 text-lg text-center'>
+            Apakah kamu batal mengirimkan pertanyaan?
+          </h2>
+          <div className='grid grid-cols-2 w-max gap-x-5'>
+            <Link href='/'>
+              <button className='px-5 py-3 font-medium text-white bg-red-400 rounded-lg'>
+                <span>Batal</span>
+              </button>
+            </Link>
+            <button
+              className='px-5 py-3 font-bold rounded-lg text-bold'
+              onClick={() => setIsModalCancelOpen(false)}
+            >
+              Tidak
+            </button>
+          </div>
+        </div>
+        <div className='absolute z-10 w-screen h-screen bg-gray-900 opacity-80' />
+      </div>
+    )
+  }
+
   return (
     <>
       {!isSubmissionCompleted() && isPageLoading() && (
         <LoadingOverlay isLoading={isPageLoading()} />
       )}
+      {isModalCancelOpen && <CancelSubmit />}
       <div className='relative grid items-center h-screen w-72'>
         <Head>
           <title>{`Kirim Pertanyaan | ${SITE_TITLE}`}</title>
           <meta name='viewport' content='width=device-width, initial-scale=1' />
         </Head>
         {!isSubmissionCompleted() && (
-          <Link href='/'>
-            <img
-              className='absolute right-0 cursor-pointer top-3'
-              src='/icons/close-icon.svg'
-              alt='Close icon'
-            ></img>
-          </Link>
+          <>
+            {watch('question').length > 0 ? (
+              <img
+                className='absolute right-0 cursor-pointer top-3'
+                src='/icons/close-icon.svg'
+                alt='Close icon'
+                onClick={() => setIsModalCancelOpen(true)}
+              />
+            ) : (
+              <Link href='/'>
+                <img
+                  className='absolute right-0 cursor-pointer top-3'
+                  src='/icons/close-icon.svg'
+                  alt='Close icon'
+                />
+              </Link>
+            )}
+          </>
         )}
         {isSubmissionCompleted() && <SumbissionConfirmation />}
         {!isSubmissionCompleted() && (

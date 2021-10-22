@@ -167,20 +167,20 @@ const Home = () => {
 
   const RestartModal = () => {
     return (
-      <div className='absolute flex-col w-screen h-screen custom-flex-center'>
+      <div className='absolute flex-col w-screen h-screen custom-flex-center dark:text-black'>
         <div className='z-20 flex-col w-64 p-3 rounded-md custom-flex-center bg-gray-50'>
           <h2 className='mb-4 text-lg text-center'>
             Apakah kamu ingin mengulangi tutorial?
           </h2>
           <div className='grid grid-cols-2 w-max gap-x-5'>
             <button
-              className='p-3 font-medium rounded-lg'
+              className='px-5 py-3 font-medium rounded-lg'
               onClick={() => setIsRestartModalOpen(false)}
             >
               <span>Tidak</span>
             </button>
             <button
-              className='p-3 font-medium text-white rounded-lg bg-primary'
+              className='px-5 py-3 font-medium text-white rounded-lg bg-primary'
               onClick={restartProductTour}
             >
               <span className='text-white'>Ulangi</span>
@@ -206,15 +206,13 @@ const Home = () => {
         </div>
       ) : (
         <div>
-          <div
-            title='Mulai ulang tutorial'
-            className='self-end mb-5 w-72'
-            onClick={() => setIsRestartModalOpen(true)}
-          >
+          <div className='self-end mb-5 w-72'>
             <img
+              title='Mulai ulang tutorial'
               className='ml-auto mr-0 cursor-pointer'
               src='/icons/info-icon.svg'
               alt='Restart product tour icon'
+              onClick={() => setIsRestartModalOpen(true)}
             ></img>
           </div>
           <div className='relative self-center items card-dimension tour-open-card'>
@@ -266,7 +264,9 @@ const Home = () => {
             </div>
           </div>
           <motion.p
-            className='self-end mt-12 text-center'
+            className={`self-end mt-12 text-center pointer-events-${
+              isOpen ? 'none' : 'auto'
+            }`}
             initial={{ opacity: isOpen ? 1 : 0 }}
             exit={{ opacity: isOpen ? 0 : 1 }}
             animate={{ opacity: isOpen ? 0 : 1 }}

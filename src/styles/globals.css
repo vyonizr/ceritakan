@@ -10,7 +10,7 @@
 }
 
 body {
-  @apply text-gray-700;
+  @apply text-gray-700 bg-white dark:bg-gray-900 dark:text-white;
 }
 
 .custom-flex-center {
@@ -65,6 +65,10 @@ a {
 
 .card-dimension {
   @apply w-72 h-96;
+}
+
+.react-joyride__tooltip .__floater__arrow {
+  @apply dark:bg-white dark:text-black !important;
 }
 
 .react-joyride__tooltip > div:nth-child(2) {
