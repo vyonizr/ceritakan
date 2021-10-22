@@ -1,20 +1,19 @@
 export const SITE_TITLE = 'Ceritakan'
 export const SITE_URL = 'https://ceritakan.vyonizr.com/'
 export const SITE_DESCRIPTION =
-  'Ceritakan adalah sebuah platform pertanyaan terbuka'
+  'Ceritakan adalah sebuah permainan kartu yang berisi pertanyaan-pertanyaan dengan topik yang beragam.'
 export const OG_IMAGE_URL = '/images/ceritakan_og.jpg'
 
 export const TOUR_STEPS = [
   {
     target: '.tour-open-card',
-    content: 'Silakan tap kartu untuk membuka pertanyaan',
+    content: 'Ketuk kartu untuk membuka pertanyaan',
     disableBeacon: true,
-    title: 'Selamat datang!',
     hideCloseButton: true,
   },
   {
     target: '.tour-open-card',
-    content: 'Tap kartunya lagi untuk mendapatkan pertanyaan baru',
+    content: 'Ketuk kartunya lagi untuk mendapatkan pertanyaan baru',
     disableBeacon: true,
     hideCloseButton: true,
   },
