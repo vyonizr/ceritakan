@@ -174,13 +174,13 @@ const Home = () => {
           </h2>
           <div className='grid grid-cols-2 w-max gap-x-5'>
             <button
-              className='p-3 font-medium rounded-lg'
+              className='px-5 py-3 font-medium rounded-lg'
               onClick={() => setIsRestartModalOpen(false)}
             >
               <span>Tidak</span>
             </button>
             <button
-              className='p-3 font-medium text-white rounded-lg bg-primary'
+              className='px-5 py-3 font-medium text-white rounded-lg bg-primary'
               onClick={restartProductTour}
             >
               <span className='text-white'>Ulangi</span>
