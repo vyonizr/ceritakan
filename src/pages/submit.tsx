@@ -128,7 +128,10 @@ const Submit = () => {
   }
 
   const isFormValid = () => {
-    return Object.keys(errors).length === 0
+    return (
+      Object.keys(errors).length === 0 ||
+      (watch('submitAs') === ANONYMOUS && (errors.name || errors.socialURL))
+    )
   }
 
   const isPageLoading = () => {
