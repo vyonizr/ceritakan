@@ -148,7 +148,7 @@ const Submit = () => {
         <div className='z-20'>
           <SyncLoader color='#047857' loading={isLoading} size={16} />
         </div>
-        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50' />
+        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50 dark:bg-gray-900' />
       </div>
     )
   }
