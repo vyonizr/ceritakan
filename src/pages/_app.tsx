@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import Script from 'next/script'
 import { useRouter } from 'next/router'
+import { ThemeProvider } from 'next-themes'
 import * as gtag from 'src/config/gtag'
 import 'normalize.css'
 import 'src/styles/tailwind.css'
@@ -24,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events])
 
   return (
-    <>
+    <ThemeProvider attribute='class'>
       {/* Global Site Tag (gtag.js) - Google Analytics */}
       <Script
         strategy='afterInteractive'
@@ -45,7 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         }}
       />
       <Component {...pageProps} />
-    </>
+    </ThemeProvider>
   )
 }
 export default MyApp
