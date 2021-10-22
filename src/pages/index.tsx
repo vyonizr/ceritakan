@@ -237,8 +237,8 @@ const Home = () => {
               onClick={() => setIsRestartModalOpen(true)}
             />
           </div>
-          <div className='relative self-center items card-dimension tour-open-card'>
-            <div className='absolute cursor-pointer' onClick={toggleCard}>
+          <div className='relative self-center cursor-pointer items card-dimension tour-open-card'>
+            <div className='absolute' onClick={toggleCard}>
               <motion.div
                 className='relative backface-invisible'
                 initial={{
@@ -266,11 +266,11 @@ const Home = () => {
               </motion.div>
             </div>
             <div
-              className='absolute cursor-pointer'
+              className='absolute'
               onClick={(event: any) => getNewCard(event)}
             >
               <motion.div
-                className='relative cursor-pointer backface-invisible'
+                className='relative backface-invisible'
                 initial={{
                   rotateY: isOpen ? 0 : CARD_FLIP_DEGREE,
                   rotate: initialDegree,
@@ -294,8 +294,12 @@ const Home = () => {
             animate={{ opacity: isOpen ? 0 : 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Link href='/submit'>
-              <a className='text-lg font-bold no-underline text-primary'>
+            <Link href={isOpen ? '#' : '/submit'}>
+              <a
+                className={`text-lg font-bold no-underline select-none text-primary ${
+                  isOpen && 'cursor-default select-none'
+                }`}
+              >
                 Kirim pertanyaan
               </a>
             </Link>
