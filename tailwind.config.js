@@ -13,6 +13,7 @@ module.exports = {
       gray: colors.coolGray,
       blue: colors.blue,
       white: colors.white,
+      red: colors.red,
       emerald: colors.emerald,
       primary: colors.emerald[700],
       black: colors.gray[700]
@@ -39,4 +40,5 @@ module.exports = {
       strategy: 'class',
     }),
   ],
+  darkMode: 'media',
 }

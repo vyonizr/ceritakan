@@ -36,6 +36,13 @@
   @apply focus:ring-primary focus:border-primary;
 }
 
+option,
+select,
+input,
+textarea {
+  @apply dark:text-black dark:bg-white;
+}
+
 option:focus-within {
   @apply bg-primary;
 }

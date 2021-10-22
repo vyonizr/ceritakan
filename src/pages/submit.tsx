@@ -128,7 +128,10 @@ const Submit = () => {
   }
 
   const isFormValid = () => {
-    return Object.keys(errors).length === 0
+    return (
+      Object.keys(errors).length === 0 ||
+      (watch('submitAs') === ANONYMOUS && (errors.name || errors.socialURL))
+    )
   }
 
   const isPageLoading = () => {
@@ -145,7 +148,7 @@ const Submit = () => {
         <div className='z-20'>
           <SyncLoader color='#047857' loading={isLoading} size={16} />
         </div>
-        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50' />
+        <div className='absolute z-10 w-screen h-screen opacity-80 bg-gray-50 dark:bg-gray-900' />
       </div>
     )
   }

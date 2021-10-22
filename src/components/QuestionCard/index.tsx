@@ -36,7 +36,7 @@ const Submitter = ({ submission }: SubmitterProps) => {
 
 const Card: React.FC<CardProps> = ({ question }: CardProps) => (
   <BaseCard>
-    <div className='relative w-full h-full p-4 border-2 border-primary custom-flex-center rounded-2xl'>
+    <div className='relative w-full h-full p-4 bg-white border-2 border-primary custom-flex-center rounded-2xl dark:bg-gray-900'>
       <p className='absolute right-0 w-full text-3xl text-center select-none top-4 font-roustel'>
         Ceritakan
       </p>
