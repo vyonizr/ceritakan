@@ -21,7 +21,7 @@ import {
 } from 'src/common/constants'
 import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
 import { REGEX_COMMA_SEPARATED_NUMBER } from 'src/helpers/regex'
-import { ProductTourTooltip } from 'src/components'
+import { ProductTourTooltip, IntroductionModal } from 'src/components'
 
 const initialDegree = getRandomFloat(
   CARD_MIN_ROTATE_DEGREE,
@@ -35,13 +35,18 @@ const Home = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [questionFetch, setQuestionFetch] = useState({
     isLoading: false,
-    data: {} as Question,
+    data: {
+      id: 1,
+      question: '',
+    } as Question,
     error: '',
   })
   const [rotateDegree, setRotateDegree] = useState(
     getRandomIntInclusive(CARD_MIN_ROTATE_DEGREE, CARD_MAX_ROTATE_DEGREE)
   )
   const [isRestartModalOpen, setIsRestartModalOpen] = useState(false)
+
+  const [isIntroModalOpen, setIsIntroModalOpen] = useState(false)
 
   useEffect(() => {
     if (
@@ -62,13 +67,13 @@ const Home = () => {
       localStorage.removeItem('r_ids')
     }
 
+    if (isProductTourNotCompleted()) {
+      setIsIntroModalOpen(true)
+    }
+
     setRun(isProductTourNotCompleted())
     handleQuestionFetch()
   }, [])
-
-  const isProductTourNotCompleted = () => {
-    return localStorage.getItem('pt') !== '1'
-  }
 
   const handleReadIds = (questionId: number) => {
     const readQuestionIds: string = localStorage.getItem('r_ids') || ''
@@ -77,6 +82,10 @@ const Home = () => {
     } else {
       localStorage.setItem('r_ids', String(questionId))
     }
+  }
+
+  const isProductTourNotCompleted = () => {
+    return localStorage.getItem('pt') !== '1'
   }
 
   const handleJoyrideCallback = (data: any) => {
@@ -213,6 +222,9 @@ const Home = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
       {isRestartModalOpen && <RestartModal />}
+      {isIntroModalOpen && (
+        <IntroductionModal onClose={() => setIsIntroModalOpen(false)} />
+      )}
 
       {isCardEmpty() ? (
         <div className='relative'>
