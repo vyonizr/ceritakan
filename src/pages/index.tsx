@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Router from 'next/router'
+import { useTheme } from 'next-themes'
 import { motion } from 'framer-motion'
 import MoonLoader from 'react-spinners/MoonLoader'
 import { ACTIONS, LIFECYCLE } from 'react-joyride'
@@ -15,6 +16,8 @@ import {
   CARD_MAX_ROTATE_DEGREE,
   CARD_MIN_ROTATE_DEGREE,
   ERROR_MESSAGE,
+  LIGHT,
+  DARK,
 } from 'src/common/constants'
 import { getRandomIntInclusive, getRandomFloat } from 'src/helpers'
 import { REGEX_COMMA_SEPARATED_NUMBER } from 'src/helpers/regex'
@@ -26,6 +29,7 @@ const initialDegree = getRandomFloat(
 )
 
 const Home = () => {
+  const { theme, setTheme } = useTheme()
   const [run, setRun] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -40,6 +44,16 @@ const Home = () => {
   const [isRestartModalOpen, setIsRestartModalOpen] = useState(false)
 
   useEffect(() => {
+    if (
+      localStorage.theme === DARK ||
+      (!('theme' in localStorage) &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      document.documentElement.classList.add(DARK)
+    } else {
+      document.documentElement.classList.remove(DARK)
+    }
+
     const readQuestionIds: string | null = localStorage.getItem('r_ids')
     const isReadIdsNotValid =
       readQuestionIds && !REGEX_COMMA_SEPARATED_NUMBER.test(readQuestionIds)
@@ -206,14 +220,22 @@ const Home = () => {
         </div>
       ) : (
         <div>
-          <div className='self-end mb-5 w-72'>
+          <div className='grid justify-end grid-flow-col mb-5 auto-cols-max gap-x-3 w-72'>
+            <button
+              aria-label='Toggle Dark Mode'
+              type='button'
+              onClick={() => setTheme(theme === DARK ? LIGHT : DARK)}
+              className='text-3xl cursor-pointer'
+            >
+              {theme === DARK ? '☀️' : '🌙'}
+            </button>
             <img
               title='Mulai ulang tutorial'
-              className='ml-auto mr-0 cursor-pointer'
+              className='inline-block cursor-pointer'
               src='/icons/info-icon.svg'
               alt='Restart product tour icon'
               onClick={() => setIsRestartModalOpen(true)}
-            ></img>
+            />
           </div>
           <div className='relative self-center items card-dimension tour-open-card'>
             <div className='absolute cursor-pointer' onClick={toggleCard}>

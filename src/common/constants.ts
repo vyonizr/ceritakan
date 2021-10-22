@@ -32,3 +32,6 @@ export const MAXIMUM_NAME_LENGTH = 15
 
 export const ANONYMOUS = 'ANONYMOUS'
 export const IDENTIFIED = 'IDENTIFIED'
+
+export const LIGHT = 'light'
+export const DARK = 'dark'

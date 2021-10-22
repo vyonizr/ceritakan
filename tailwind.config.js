@@ -40,5 +40,5 @@ module.exports = {
       strategy: 'class',
     }),
   ],
-  darkMode: 'media',
+  darkMode: 'class',
 }
