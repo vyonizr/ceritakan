@@ -19,7 +19,7 @@ const Submitter = ({ submission }: SubmitterProps) => {
         <a
           target='_blank'
           rel='noreferrer noopener'
-          className='absolute bottom-0 p-3 mx-auto text-sm italic text-center select-none text-primary'
+          className='absolute bottom-0 p-3 mx-auto text-sm italic text-center text-primary'
         >
           {submission.sender_name}
         </a>
@@ -28,7 +28,7 @@ const Submitter = ({ submission }: SubmitterProps) => {
   }
 
   return (
-    <small className='absolute bottom-0 p-3 mx-auto italic text-center select-none'>
+    <small className='absolute bottom-0 p-3 mx-auto italic text-center'>
       {submission.sender_type === ANONYMOUS ? 'Anonim' : submission.sender_name}
     </small>
   )
@@ -36,17 +36,15 @@ const Submitter = ({ submission }: SubmitterProps) => {
 
 const Card: React.FC<CardProps> = ({ question }: CardProps) => (
   <BaseCard>
-    <div className='relative w-full h-full p-4 border-2 border-primary custom-flex-center rounded-2xl'>
-      <p className='absolute right-0 w-full text-3xl text-center select-none top-4 font-roustel'>
+    <div className='relative w-full h-full p-4 border-2 select-none border-primary custom-flex-center rounded-2xl'>
+      <p className='absolute right-0 w-full text-3xl text-center top-4 font-roustel'>
         Ceritakan
       </p>
       <div className='relative'>
-        <p className='container absolute right-0 text-center select-none -top-7'>
+        <p className='container absolute right-0 text-center -top-7'>
           {question.topic?.icon}
         </p>
-        <p className='subpixel-antialiased text-center select-none'>
-          {question.question}
-        </p>
+        <p className='subpixel-antialiased text-center'>{question.question}</p>
       </div>
       {question.submission && <Submitter submission={question.submission} />}
     </div>
