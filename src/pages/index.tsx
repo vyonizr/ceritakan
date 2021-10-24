@@ -54,9 +54,9 @@ const Home = () => {
       (!('theme' in localStorage) &&
         window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
-      document.documentElement.classList.add(DARK)
+      setTheme(DARK)
     } else {
-      document.documentElement.classList.remove(DARK)
+      setTheme(LIGHT)
     }
 
     const readQuestionIds: string | null = localStorage.getItem('r_ids')

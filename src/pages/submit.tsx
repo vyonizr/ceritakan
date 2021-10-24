@@ -234,20 +234,21 @@ const Submit = () => {
             exit={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.25 }}
-            className='container flex-col self-start mt-14 custom-flex-center'
+            className='container flex-col self-start mt-14'
           >
-            <h1 className='mb-5 text-3xl'>Kirim Pertanyaan</h1>
+            <h1 className='mb-5 text-3xl text-center'>Kirim Pertanyaan</h1>
             <form
-              className='container flex-col custom-flex-center'
+              className='container flex-col'
               onSubmit={handleSubmit(onSubmit)}
             >
+              <label className='block'>Pilih Topik</label>
               <select
                 defaultValue=''
-                className='mb-2 rounded form-select'
+                className='container mb-3 rounded form-select'
                 {...register('selectedTopicId', { required: true })}
               >
                 <option value='' disabled>
-                  Pilih Topik
+                  Topik
                 </option>
                 {topics.data.map((topic, index) => (
                   <option
@@ -258,7 +259,8 @@ const Submit = () => {
               </select>
               {watch('selectedTopicId') !== '' && (
                 <>
-                  <div className='container mb-4'>
+                  <div className='container mb-3'>
+                    <label>Pertanyaan</label>
                     <textarea
                       className='block w-full p-3 rounded resize-none border-primary form-textarea'
                       placeholder='Tulis pertanyaanmu di sini'
@@ -269,10 +271,10 @@ const Submit = () => {
                       <ErrorMessage message={errors.question.message} />
                     )}
                   </div>
-                  <span>Kirim sebagai:</span>
+                  <label>Kirim Sebagai</label>
                   <select
                     defaultValue={ANONYMOUS}
-                    className='rounded form-select'
+                    className='container rounded form-select'
                     {...register('submitAs')}
                   >
                     <option value={ANONYMOUS}>😶 Anonim</option>
@@ -286,11 +288,12 @@ const Submit = () => {
                       transition={{ duration: 0.25 }}
                       className='container'
                     >
-                      <div className='my-2'>
+                      <div className='my-3'>
+                        <label>Nama Kamu</label>
                         <input
                           type='text'
                           className='container rounded form-input'
-                          placeholder='Nama kamu'
+                          placeholder='John Doe'
                           autoComplete='off'
                           {...register('name', {
                             required: {
@@ -307,10 +310,12 @@ const Submit = () => {
                           <ErrorMessage message={errors.name.message} />
                         )}
                       </div>
+
+                      <label>{'Link Sosmed (Opsional)'}</label>
                       <input
                         type='text'
                         className='container rounded form-input'
-                        placeholder='Link sosmed (opsional)'
+                        placeholder='https://twitter.com/twitter'
                         autoComplete='off'
                         {...register('socialURL', {
                           pattern: {
