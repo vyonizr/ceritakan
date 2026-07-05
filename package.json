@@ -5,15 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build --webpack",
     "start": "next start",
     "lint": "eslint ."
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
     "@tailwindcss/forms": "^0.5.11",
+    "csv-parse": "^7.0.1",
     "framer-motion": "^12.42.2",
     "next": "16.2.10",
     "next-themes": "^0.4.6",
@@ -21,21 +19,16 @@
     "postcss-viewport-height-correction": "^1.1.1",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "react-hook-form": "^7.81.0",
     "react-joyride": "^3.1.0",
     "react-spinners": "^0.17.0"
   },
   "devDependencies": {
-    "@types/gtag.js": "^0.0.7",
     "@types/react": "19.2.17",
-    "@types/react-gtm-module": "^2.0.1",
     "autoprefixer": "^10.3.7",
-    "dotenv": "^17.4.2",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.10",
     "@tailwindcss/postcss": "^4.3.2",
     "postcss": "^8.5.16",
-    "prisma": "^7.8.0",
     "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3"
   },

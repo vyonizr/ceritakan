@@ -1,78 +1,44 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from 'src/config'
-import getRandomIntInclusive from 'src/helpers/getRandomIntInclusive'
-
-type Question = {
-  id: number
-  question: string
-} | null
+import { getQuestions } from 'src/data/questions'
+import { TOPICS } from 'src/common/constants'
+import { getRandomIntInclusive } from 'src/helpers'
+import { Question } from 'src/common/types'
 
 type ResponsePayload = {
   status: string
-  data?: Question | Question[]
+  data?: Question | {}
   message?: string
 }
 
-export default async function handler(
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponsePayload>
 ) {
-  let string_r_ids = req.query.r_ids as string
+  const string_r_ids = req.query.r_ids as string
   const r_ids: number[] =
-    string_r_ids?.split(',').map((id: string) => Number(id)) || []
+    string_r_ids?.split(',').filter(Boolean).map(Number) || []
 
-  try {
-    const questionIds = await prisma.question.findMany({
-      select: {
-        id: true,
-      },
-      where: {
-        NOT: {
-          id: {
-            in: r_ids,
-          },
-        },
-      },
+  const unseenQuestions = getQuestions().filter((q) => !r_ids.includes(q.id))
+
+  if (unseenQuestions.length === 0) {
+    return res.status(200).json({
+      status: 'success',
+      data: {},
     })
-
-    if (questionIds.length === 0) {
-      res.status(200).json({
-        status: 'success',
-        data: {} as Question,
-      })
-    } else {
-      const randomIndex = getRandomIntInclusive(0, questionIds.length - 1)
-      const randomId = questionIds[randomIndex].id
-
-      const randomQuestion: Question = await prisma.question.findUnique({
-        select: {
-          id: true,
-          question: true,
-          topic: true,
-          submission: {
-            select: {
-              sender_name: true,
-              sender_social_url: true,
-              sender_type: true,
-            },
-          },
-        },
-        where: {
-          id: randomId,
-        },
-      })
-
-      res.status(200).json({
-        status: 'success',
-        data: randomQuestion,
-      })
-    }
-  } catch (error) {
-    res.status(500).json({
-      status: 'failed',
-      message: 'Internal server error',
-    })
-  } finally {
-    await prisma.$disconnect()
   }
+
+  const randomIndex = getRandomIntInclusive(0, unseenQuestions.length - 1)
+  const randomQuestion = unseenQuestions[randomIndex]
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      id: randomQuestion.id,
+      question: randomQuestion.question,
+      topic: {
+        id: randomQuestion.topicId,
+        ...TOPICS[randomQuestion.topicId],
+      },
+    },
+  })
 }

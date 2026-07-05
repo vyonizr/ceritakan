@@ -25,12 +25,16 @@ export const CARD_MAX_ROTATE_DEGREE = 1
 export const CARD_MIN_ROTATE_DEGREE = 0 - CARD_MAX_ROTATE_DEGREE
 export const ERROR_MESSAGE = 'Ada yang salah nih. Coba di-refresh, ya.'
 
-export const MINIMUM_QUESTION_LENGTH = 15
-export const MAXIMUM_QUESTION_LENGTH = 100
-export const MAXIMUM_NAME_LENGTH = 15
-
-export const ANONYMOUS = 'ANONYMOUS'
-export const IDENTIFIED = 'IDENTIFIED'
-
 export const LIGHT = 'light'
 export const DARK = 'dark'
+
+// The original topic names/icons lived only in the now-decommissioned
+// Postgres DB and weren't backed up. This mapping is a best-effort
+// reconstruction based on each topic_id's question content in the CSV.
+export const TOPICS: Record<number, { name: string; icon: string }> = {
+  1: { name: 'Umum', icon: '🌐' },
+  2: { name: 'Cinta', icon: '❤️' },
+  3: { name: 'Musik', icon: '🎵' },
+  4: { name: 'Pekerjaan', icon: '💼' },
+  5: { name: 'Film', icon: '🎬' },
+}

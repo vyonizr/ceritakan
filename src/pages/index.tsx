@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Link from 'next/link'
 import Router from 'next/router'
 import { useTheme } from 'next-themes'
 import { motion } from 'framer-motion'
@@ -297,25 +296,6 @@ const Home = () => {
               </motion.div>
             </div>
           </div>
-          <motion.p
-            className={`self-end mt-12 text-center pointer-events-${
-              isOpen ? 'none' : 'auto'
-            }`}
-            initial={{ opacity: isOpen ? 1 : 0 }}
-            exit={{ opacity: isOpen ? 0 : 1 }}
-            animate={{ opacity: isOpen ? 0 : 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Link href={isOpen ? '#' : '/submit'}>
-              <a
-                className={`text-lg font-bold no-underline select-none text-primary ${
-                  isOpen && 'cursor-default select-none'
-                }`}
-              >
-                Kirim pertanyaan
-              </a>
-            </Link>
-          </motion.p>
         </div>
       )}
 
