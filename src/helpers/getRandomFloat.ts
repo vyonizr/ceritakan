@@ -9,7 +9,7 @@ function getRandomFloat(
 ) {
   const randomFloat = Math.random() * (max - min) + min
 
-  return randomFloat.toFixed(1)
+  return Number(randomFloat.toFixed(1))
 }
 
 export default getRandomFloat
