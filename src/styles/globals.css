@@ -1,3 +1,5 @@
+@reference "./tailwind.css";
+
 #__next {
   margin: 0;
   overflow-x: hidden;
@@ -68,7 +70,7 @@ a {
 }
 
 .react-joyride__tooltip .__floater__arrow {
-  @apply dark:bg-white dark:text-black !important;
+  @apply dark:bg-white! dark:text-black!;
 }
 
 .react-joyride__tooltip > div:nth-child(2) {

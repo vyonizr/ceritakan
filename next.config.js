@@ -1,13 +1,16 @@
 /** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa')
-const runtimeCaching = require('next-pwa/cache')
 const isDevelopment = process.env.NODE_ENV === 'development'
 
-module.exports = withPWA({
+const baseConfig = {
   reactStrictMode: true,
-  pwa: {
+  outputFileTracingRoot: __dirname,
+}
+
+if (isDevelopment) {
+  module.exports = baseConfig
+} else {
+  const withPWA = require('@ducanh2912/next-pwa').default({
     dest: 'public',
-    runtimeCaching,
-  },
-  disable: isDevelopment
-})
+  })
+  module.exports = withPWA(baseConfig)
+}

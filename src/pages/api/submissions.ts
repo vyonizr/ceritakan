@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from 'src/config'
 import { setErrorResponse } from 'src/helpers'
 import { ANONYMOUS, IDENTIFIED } from 'src/common/constants'
-import type { SenderType } from '@prisma/client'
+import type { SenderType } from 'src/generated/prisma/client'
 
 import {
   MINIMUM_QUESTION_LENGTH,

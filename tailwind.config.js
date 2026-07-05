@@ -1,7 +1,7 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
+  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     screens: {
       sm: '480px',
@@ -10,7 +10,7 @@ module.exports = {
       xl: '1440px',
     },
     colors: {
-      gray: colors.coolGray,
+      gray: colors.gray,
       blue: colors.blue,
       white: colors.white,
       red: colors.red,

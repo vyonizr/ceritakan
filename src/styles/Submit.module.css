@@ -1,3 +1,5 @@
+@reference "./tailwind.css";
+
 .submit-button {
   @apply container self-end p-2 mt-6 font-medium text-white rounded bg-primary;
 }

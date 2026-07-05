@@ -325,7 +325,7 @@ const Home = () => {
         </div>
       </div>
       <ProductTourTooltip
-        callback={handleJoyrideCallback}
+        onEvent={handleJoyrideCallback}
         steps={TOUR_STEPS}
         run={run}
         stepIndex={stepIndex}
