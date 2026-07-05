@@ -34,10 +34,13 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
   },
+  "engines": {
+    "node": "24.x"
+  },
   "description": "An open question platform",
   "main": "index.js",
   "author": "Fitrahtur Rahman <fitrahtur@gmail.com>",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "overrides": {
     "@types/react": "19.2.17"
   }
