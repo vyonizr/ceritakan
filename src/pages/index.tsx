@@ -29,6 +29,7 @@ const initialDegree = getRandomFloat(
 
 const Home = () => {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [run, setRun] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -48,15 +49,7 @@ const Home = () => {
   const [isIntroModalOpen, setIsIntroModalOpen] = useState(false)
 
   useEffect(() => {
-    if (
-      localStorage.theme === DARK ||
-      (!('theme' in localStorage) &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      setTheme(DARK)
-    } else {
-      setTheme(LIGHT)
-    }
+    setMounted(true)
 
     const readQuestionIds: string | null = localStorage.getItem('r_ids')
     const isReadIdsNotValid =
@@ -238,7 +231,7 @@ const Home = () => {
               onClick={() => setTheme(theme === DARK ? LIGHT : DARK)}
               className='text-3xl cursor-pointer'
             >
-              {theme === DARK ? '☀️' : '🌙'}
+              {mounted ? (theme === DARK ? '☀️' : '🌙') : null}
             </button>
             <img
               title='Mulai ulang tutorial'
