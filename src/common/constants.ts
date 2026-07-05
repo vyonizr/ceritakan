@@ -8,14 +8,14 @@ export const TOUR_STEPS = [
   {
     target: '.tour-open-card',
     content: 'Ketuk kartu untuk membuka pertanyaan',
-    disableBeacon: true,
-    hideCloseButton: true,
+    skipBeacon: true,
+    buttons: [],
   },
   {
     target: '.tour-open-card',
     content: 'Ketuk kartunya lagi untuk mendapatkan pertanyaan baru',
-    disableBeacon: true,
-    hideCloseButton: true,
+    skipBeacon: true,
+    buttons: [],
   },
 ]
 
