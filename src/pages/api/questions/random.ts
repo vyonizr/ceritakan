@@ -14,7 +14,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponsePayload>
 ) {
-  const string_r_ids = req.query.r_ids as string
+  const string_r_ids = (req.body?.r_ids ?? req.query.r_ids) as string
   const r_ids: number[] =
     string_r_ids?.split(',').filter(Boolean).map(Number) || []
 

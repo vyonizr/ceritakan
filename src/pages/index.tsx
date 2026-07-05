@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useSyncExternalStore } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 import { useTheme } from 'next-themes'
@@ -29,12 +29,24 @@ const initialDegree = getRandomFloat(
 
 const Home = () => {
   const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  const [run, setRun] = useState(false)
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  )
+  const tourNotCompleted = useSyncExternalStore(
+    () => () => {},
+    () => localStorage.getItem('pt') !== '1',
+    () => false
+  )
+  const [tourAdvanced, setTourAdvanced] = useState(false)
+  const [introDismissed, setIntroDismissed] = useState(false)
+  const run = tourNotCompleted && !tourAdvanced
+  const isIntroModalOpen = tourNotCompleted && !introDismissed
   const [stepIndex, setStepIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [questionFetch, setQuestionFetch] = useState({
-    isLoading: false,
+    isLoading: true,
     data: {
       id: 1,
       question: '',
@@ -46,11 +58,22 @@ const Home = () => {
   )
   const [isRestartModalOpen, setIsRestartModalOpen] = useState(false)
 
-  const [isIntroModalOpen, setIsIntroModalOpen] = useState(false)
+  const isProductTourNotCompleted = () => {
+    return localStorage.getItem('pt') !== '1'
+  }
+
+  const handleQuestionFetch = () => {
+    setQuestionFetch((state) => ({
+      ...state,
+      isLoading: true,
+    }))
+
+    setTimeout(() => {
+      fetchQuestion()
+    }, 1000)
+  }
 
   useEffect(() => {
-    setMounted(true)
-
     const readQuestionIds: string | null = localStorage.getItem('r_ids')
     const isReadIdsNotValid =
       readQuestionIds && !REGEX_COMMA_SEPARATED_NUMBER.test(readQuestionIds)
@@ -59,12 +82,10 @@ const Home = () => {
       localStorage.removeItem('r_ids')
     }
 
-    if (isProductTourNotCompleted()) {
-      setIsIntroModalOpen(true)
-    }
-
-    setRun(isProductTourNotCompleted())
-    handleQuestionFetch()
+    setTimeout(() => {
+      fetchQuestion()
+    }, 1000)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleReadIds = (questionId: number) => {
@@ -76,10 +97,6 @@ const Home = () => {
     }
   }
 
-  const isProductTourNotCompleted = () => {
-    return localStorage.getItem('pt') !== '1'
-  }
-
   const handleJoyrideCallback = (data: any) => {
     const { action, index, lifecycle } = data
 
@@ -89,7 +106,7 @@ const Home = () => {
       lifecycle === LIFECYCLE.COMPLETE
 
     if (isFirstStepDone) {
-      setRun(false)
+      setTourAdvanced(true)
     }
   }
 
@@ -111,17 +128,6 @@ const Home = () => {
       setIsOpen((state) => !state)
       setStepIndex((state) => state + 1)
     }
-  }
-
-  const handleQuestionFetch = () => {
-    setQuestionFetch((state) => ({
-      ...state,
-      isLoading: true,
-    }))
-
-    setTimeout(() => {
-      fetchQuestion()
-    }, 1000)
   }
 
   const getNewCard = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,7 +152,11 @@ const Home = () => {
   const fetchQuestion = async () => {
     try {
       const r_ids: string = localStorage.getItem('r_ids') || ''
-      const response = await fetch(`/api/questions/random?r_ids=${r_ids}`)
+      const response = await fetch('/api/questions/random', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ r_ids }),
+      })
       const responseJSON = await response.json()
       handleReadIds(responseJSON.data.id)
 
@@ -161,7 +171,7 @@ const Home = () => {
         data: {} as Question,
         error: ERROR_MESSAGE,
       })
-      setRun(false)
+      setTourAdvanced(true)
     }
   }
 
@@ -215,7 +225,7 @@ const Home = () => {
       </Head>
       {isRestartModalOpen && <RestartModal />}
       {isIntroModalOpen && (
-        <IntroductionModal onClose={() => setIsIntroModalOpen(false)} />
+        <IntroductionModal onClose={() => setIntroDismissed(true)} />
       )}
 
       {isCardEmpty() ? (
